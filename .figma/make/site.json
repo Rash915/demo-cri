@@ -1,0 +1,10 @@
+{
+  "description": "A responsive e-commerce platform offering CRI Pumps products with intuitive search, filters, and seamless shopping for agricultural and industrial needs.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
