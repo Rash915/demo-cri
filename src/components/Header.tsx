@@ -42,10 +42,10 @@ export default function Header({
 
   return (
     <header className="sticky top-0 z-50 shadow-xl" style={{ background: 'var(--primary)' }}>
-      {/* Top announcement strip featuring Hebron Enterprises */}
-      <div className="bg-gradient-to-r from-blue-950 via-slate-900 to-blue-950 border-b border-blue-800 text-amber-300 py-1 px-4 text-[11px] sm:text-xs text-center font-medium flex items-center justify-between gap-2 overflow-x-auto whitespace-nowrap">
+      {/* Top announcement strip */}
+      <div className="bg-gradient-to-r from-blue-950 via-slate-900 to-blue-950 border-b border-blue-800 text-amber-300 py-1 px-3 text-[10px] sm:text-xs text-center font-medium flex items-center justify-between gap-2 overflow-x-auto whitespace-nowrap">
         <div className="flex items-center gap-1.5 mx-auto">
-          <span className="bg-amber-400 text-gray-950 text-[9px] font-extrabold px-1.5 py-0.5 rounded uppercase tracking-wider">OFFICIAL</span>
+          <span className="bg-amber-400 text-gray-950 text-[9px] font-extrabold px-1.5 py-0.2 rounded uppercase tracking-wider">OFFICIAL</span>
           <span><strong>HEBRON ENTERPRISES</strong> — Authorised Main Dealer & Stockist of C.R.I. Pumps</span>
           <span className="hidden md:inline text-blue-300">|</span>
           <span className="hidden md:inline text-blue-200">📞 Sales & Support: +91 98765 43210</span>
@@ -54,41 +54,104 @@ export default function Header({
 
       {/* Main Header Row */}
       <div className="border-b border-blue-700/80 w-full">
-        <div className="w-full px-2 sm:px-6 md:px-8 py-2.5 grid grid-cols-3 items-center gap-2">
-          {/* Left Column: CRI Pumps Brand Logo */}
-          <div className="flex items-center justify-start">
-            <button onClick={onHome} className="flex items-center gap-2 focus:outline-none group text-left">
-              <div className="bg-white px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg shadow-md flex items-center gap-2 transition-transform group-hover:scale-105 border border-blue-200">
+        {/* MOBILE VIEW (< md) */}
+        <div className="md:hidden w-full px-3 py-2 flex flex-col gap-2">
+          {/* Mobile Top Row: Logo on Left, Actions on Right */}
+          <div className="flex items-center justify-between gap-2">
+            <button onClick={onHome} className="flex items-center gap-2 focus:outline-none shrink-0">
+              <div className="bg-white px-2 py-1 rounded-lg shadow-sm flex items-center border border-blue-200">
                 <img 
                   src="https://www.crifluidsystems.com/za/wp-content/uploads/2021/02/cri-logo-new.png" 
                   alt="C.R.I. Pumps Logo" 
-                  className="h-6 sm:h-8 md:h-9 w-auto object-contain"
+                  className="h-6 w-auto object-contain"
+                />
+              </div>
+            </button>
+
+            {/* Mobile Actions */}
+            <div className="flex items-center gap-2 shrink-0">
+              {/* Wishlist button */}
+              <button onClick={onWishlistOpen} className="relative p-1.5 text-white hover:text-amber-300 rounded transition-colors" title="Wishlist">
+                <HeartIcon size={20} />
+                {wishlistCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                    {wishlistCount}
+                  </span>
+                )}
+              </button>
+
+              {/* Cart button */}
+              <button onClick={onCartOpen} className="relative flex items-center gap-1 bg-amber-400 text-gray-950 text-xs font-bold px-2.5 py-1.5 rounded-lg shadow-sm">
+                <CartIcon size={16} />
+                <span>Cart</span>
+                {cartCount > 0 && (
+                  <span className="bg-red-600 text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                    {cartCount}
+                  </span>
+                )}
+              </button>
+
+              {/* Mobile menu toggle */}
+              <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-white p-1 text-gray-200">
+                {mobileMenuOpen ? <CloseIcon size={22} /> : <MenuIcon size={22} />}
+              </button>
+            </div>
+          </div>
+
+          {/* Mobile Centered Highlight Banner: HEBRON ENTERPRISES */}
+          <div 
+            onClick={onHome}
+            className="w-full bg-gradient-to-r from-amber-500/20 via-amber-400/30 to-amber-500/20 border border-amber-400/80 rounded-lg px-3 py-1.5 text-center cursor-pointer shadow-sm backdrop-blur-xs flex flex-col items-center justify-center"
+          >
+            <h1 className="text-sm font-black tracking-wider uppercase text-amber-300 leading-tight">
+              HEBRON ENTERPRISES
+            </h1>
+            <div className="flex items-center justify-center gap-1 mt-0.5">
+              <span className="text-amber-400 text-[8px]">★</span>
+              <span className="text-white text-[9px] font-bold tracking-widest uppercase text-blue-100">
+                AUTHORISED MAIN DEALER — C.R.I. PUMPS
+              </span>
+              <span className="text-amber-400 text-[8px]">★</span>
+            </div>
+          </div>
+        </div>
+
+        {/* DESKTOP VIEW (>= md): Clean 3-Column Grid */}
+        <div className="hidden md:grid w-full px-6 lg:px-8 py-2.5 grid-cols-3 items-center gap-4">
+          {/* Left Column: CRI Pumps Brand Logo */}
+          <div className="flex items-center justify-start">
+            <button onClick={onHome} className="flex items-center gap-2 focus:outline-none group text-left">
+              <div className="bg-white px-3 py-1.5 rounded-lg shadow-md flex items-center gap-2 transition-transform group-hover:scale-105 border border-blue-200">
+                <img 
+                  src="https://www.crifluidsystems.com/za/wp-content/uploads/2021/02/cri-logo-new.png" 
+                  alt="C.R.I. Pumps Logo" 
+                  className="h-8 md:h-9 w-auto object-contain"
                 />
               </div>
             </button>
           </div>
 
-          {/* Center Column: HEBRON ENTERPRISES (EXACT DEAD CENTER) */}
+          {/* Center Column: HEBRON ENTERPRISES (DEAD CENTER) */}
           <div 
             onClick={onHome}
             className="flex flex-col items-center justify-center cursor-pointer group text-center"
           >
-            <div className="bg-gradient-to-r from-amber-500/20 via-amber-400/30 to-amber-500/20 border-2 border-amber-400/80 hover:border-amber-300 rounded-xl px-2 sm:px-6 py-1 shadow-lg backdrop-blur-md transition-all group-hover:scale-[1.02]">
-              <h1 className="text-xs sm:text-lg md:text-2xl lg:text-3xl font-black tracking-wider uppercase text-amber-300 drop-shadow-md leading-none py-0.5 font-sans whitespace-nowrap">
+            <div className="bg-gradient-to-r from-amber-500/20 via-amber-400/30 to-amber-500/20 border-2 border-amber-400/80 hover:border-amber-300 rounded-xl px-4 lg:px-6 py-1 shadow-lg backdrop-blur-md transition-all group-hover:scale-[1.02]">
+              <h1 className="text-lg md:text-2xl lg:text-3xl font-black tracking-wider uppercase text-amber-300 drop-shadow-md leading-none py-0.5 font-sans whitespace-nowrap">
                 HEBRON ENTERPRISES
               </h1>
-              <div className="flex items-center justify-center gap-1 sm:gap-1.5 mt-0.5">
-                <span className="text-amber-400 text-[8px] sm:text-[10px]">★</span>
-                <span className="text-white text-[7px] sm:text-[10px] md:text-[11px] font-bold tracking-widest uppercase text-blue-100 whitespace-nowrap">
+              <div className="flex items-center justify-center gap-1.5 mt-0.5">
+                <span className="text-amber-400 text-[9px] md:text-[10px]">★</span>
+                <span className="text-white text-[9px] md:text-[11px] font-bold tracking-widest uppercase text-blue-100 whitespace-nowrap">
                   AUTHORISED MAIN DEALER
                 </span>
-                <span className="text-amber-400 text-[8px] sm:text-[10px]">★</span>
+                <span className="text-amber-400 text-[9px] md:text-[10px]">★</span>
               </div>
             </div>
           </div>
 
           {/* Right Column: Actions */}
-          <div className="flex items-center justify-end gap-1.5 sm:gap-2">
+          <div className="flex items-center justify-end gap-2">
             {/* Language */}
             <div className="relative hidden lg:block">
               <button
@@ -115,7 +178,7 @@ export default function Header({
             </div>
 
             {/* Login / User Account */}
-            <div className="relative hidden sm:block">
+            <div className="relative">
               {user ? (
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
@@ -201,17 +264,12 @@ export default function Header({
                 </span>
               )}
             </button>
-
-            {/* Mobile menu toggle */}
-            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden text-white p-1.5">
-              {mobileMenuOpen ? <CloseIcon size={22} /> : <MenuIcon size={22} />}
-            </button>
           </div>
         </div>
       </div>
 
-      {/* Row 2: Main Search Bar */}
-      <div className="bg-blue-900/60 border-b border-blue-700/60 px-4 py-2 flex items-center justify-center">
+      {/* Row 2: Search Bar */}
+      <div className="bg-blue-900/60 border-b border-blue-700/60 px-3 sm:px-4 py-2 flex items-center justify-center">
         <form onSubmit={handleSearch} className="w-full max-w-3xl flex">
           <div className="flex w-full rounded-xl overflow-hidden border-2 border-sky-300/80 focus-within:border-amber-400 transition-colors shadow-md">
             <input
