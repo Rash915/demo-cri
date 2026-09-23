@@ -41,7 +41,7 @@ export default function Footer({ onCategorySelect }: FooterProps) {
       <div className="w-full px-4 sm:px-6 md:px-8 py-8 sm:py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
         {/* Brand */}
         <div>
-          <div className="mb-4">
+          <div className="mb-4 flex items-center gap-3">
             <div className="bg-white px-3 py-2 rounded-lg shadow-sm inline-block">
               <img 
                 src="https://www.crifluidsystems.com/za/wp-content/uploads/2021/02/cri-logo-new.png" 
@@ -49,14 +49,18 @@ export default function Footer({ onCategorySelect }: FooterProps) {
                 className="h-9 sm:h-10 w-auto object-contain"
               />
             </div>
+            <div>
+              <h3 className="text-amber-400 font-extrabold text-base tracking-wider uppercase">HEBRON ENTERPRISES</h3>
+              <p className="text-[10px] text-blue-300 font-bold uppercase tracking-wider">Authorised Main Dealer</p>
+            </div>
           </div>
           <p className="text-gray-400 text-xs sm:text-sm leading-relaxed mb-6">
-            India's leading pump manufacturer since 1961. Trusted by 5 million+ customers across agriculture, domestic, and industrial sectors.
+            <strong>Hebron Enterprises</strong> is the official authorised main dealer and distributor for C.R.I. Pumps — offering 100% authentic pumps, motors, valves, and pipes with genuine manufacturer warranties and expert sales support.
           </p>
           <div className="space-y-2 text-xs sm:text-sm">
-            <div className="flex items-start gap-2"><span className="text-blue-400 shrink-0 mt-0.5"><MapPinIcon size={16} /></span><span>1/2, CRI Road, Ukkadam, Coimbatore – 641 001, Tamil Nadu, India</span></div>
-            <div className="flex items-center gap-2"><span className="text-blue-400 shrink-0"><PhoneIcon size={16} /></span><span>+91 422 456 7890</span></div>
-            <div className="flex items-center gap-2"><span className="text-blue-400 shrink-0"><MailIcon size={16} /></span><span>support@cripumps.com</span></div>
+            <div className="flex items-start gap-2"><span className="text-blue-400 shrink-0 mt-0.5"><MapPinIcon size={16} /></span><span>Hebron Enterprises, Main Dealer Outlet, CRI Road, Coimbatore – 641 001, Tamil Nadu</span></div>
+            <div className="flex items-center gap-2"><span className="text-blue-400 shrink-0"><PhoneIcon size={16} /></span><span>+91 98765 43210 / +91 422 456 7890</span></div>
+            <div className="flex items-center gap-2"><span className="text-blue-400 shrink-0"><MailIcon size={16} /></span><span>sales@hebronenterprises.com</span></div>
           </div>
         </div>
 

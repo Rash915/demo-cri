@@ -39,8 +39,8 @@ export default function WhyCRI() {
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3" style={{ fontFamily: 'DM Serif Display, serif' }}>
             Why Choose CRI Pumps?
           </h2>
-          <p className="text-gray-500 max-w-xl mx-auto text-xs sm:text-sm">
-            Six decades of engineering precision, customer trust, and relentless innovation make CRI India's #1 pump brand.
+          <p className="text-gray-600 max-w-xl mx-auto text-xs sm:text-sm font-medium">
+            At <strong>Hebron Enterprises</strong>, we deliver six decades of CRI engineering precision, customer trust, and 100% genuine guaranteed products.
           </p>
         </div>
 

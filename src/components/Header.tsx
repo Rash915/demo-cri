@@ -41,47 +41,62 @@ export default function Header({
   };
 
   return (
-    <header className="sticky top-0 z-50 shadow-md" style={{ background: 'var(--primary)' }}>
-      {/* Top bar */}
-      <div className="border-b border-blue-700 w-full">
-        <div className="w-full px-4 sm:px-6 md:px-8 py-2 flex items-center justify-between gap-4">
-          {/* Logo */}
-          <button onClick={onHome} className="flex items-center gap-3 shrink-0 focus:outline-none group text-left">
-            <div className="bg-white px-2.5 py-1.5 rounded-lg shadow-sm flex items-center justify-center transition-transform group-hover:scale-105">
-              <img 
-                src="https://www.crifluidsystems.com/za/wp-content/uploads/2021/02/cri-logo-new.png" 
-                alt="C.R.I. Pumps Logo" 
-                className="h-7 sm:h-9 w-auto object-contain"
-              />
-            </div>
-          </button>
+    <header className="sticky top-0 z-50 shadow-xl" style={{ background: 'var(--primary)' }}>
+      {/* Top announcement strip featuring Hebron Enterprises */}
+      <div className="bg-gradient-to-r from-blue-950 via-slate-900 to-blue-950 border-b border-blue-800 text-amber-300 py-1 px-4 text-[11px] sm:text-xs text-center font-medium flex items-center justify-between gap-2 overflow-x-auto whitespace-nowrap">
+        <div className="flex items-center gap-1.5 mx-auto">
+          <span className="bg-amber-400 text-gray-950 text-[9px] font-extrabold px-1.5 py-0.5 rounded uppercase tracking-wider">OFFICIAL</span>
+          <span><strong>HEBRON ENTERPRISES</strong> — Authorised Main Dealer & Stockist of C.R.I. Pumps</span>
+          <span className="hidden md:inline text-blue-300">|</span>
+          <span className="hidden md:inline text-blue-200">📞 Sales & Support: +91 98765 43210</span>
+        </div>
+      </div>
 
-          {/* Search */}
-          <form onSubmit={handleSearch} className="flex-1 max-w-2xl hidden md:flex">
-            <div className="flex w-full rounded-lg overflow-hidden border-2 border-sky-300 focus-within:border-white transition-colors">
-              <input
-                type="text"
-                placeholder="Search for pumps, pipes, irrigation..."
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
-                className="flex-1 px-4 py-2 text-sm outline-none bg-white text-gray-800"
-              />
-              <button type="submit" className="px-4 bg-amber-400 hover:bg-amber-500 transition-colors text-gray-900 flex items-center gap-1">
-                <SearchIcon size={18} />
-              </button>
-            </div>
-          </form>
+      {/* Main Header Row */}
+      <div className="border-b border-blue-700/80 w-full">
+        <div className="w-full px-2 sm:px-6 md:px-8 py-2.5 grid grid-cols-3 items-center gap-2">
+          {/* Left Column: CRI Pumps Brand Logo */}
+          <div className="flex items-center justify-start">
+            <button onClick={onHome} className="flex items-center gap-2 focus:outline-none group text-left">
+              <div className="bg-white px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg shadow-md flex items-center gap-2 transition-transform group-hover:scale-105 border border-blue-200">
+                <img 
+                  src="https://www.crifluidsystems.com/za/wp-content/uploads/2021/02/cri-logo-new.png" 
+                  alt="C.R.I. Pumps Logo" 
+                  className="h-6 sm:h-8 md:h-9 w-auto object-contain"
+                />
+              </div>
+            </button>
+          </div>
 
-          {/* Right actions */}
-          <div className="flex items-center gap-1">
+          {/* Center Column: HEBRON ENTERPRISES (EXACT DEAD CENTER) */}
+          <div 
+            onClick={onHome}
+            className="flex flex-col items-center justify-center cursor-pointer group text-center"
+          >
+            <div className="bg-gradient-to-r from-amber-500/20 via-amber-400/30 to-amber-500/20 border-2 border-amber-400/80 hover:border-amber-300 rounded-xl px-2 sm:px-6 py-1 shadow-lg backdrop-blur-md transition-all group-hover:scale-[1.02]">
+              <h1 className="text-xs sm:text-lg md:text-2xl lg:text-3xl font-black tracking-wider uppercase text-amber-300 drop-shadow-md leading-none py-0.5 font-sans whitespace-nowrap">
+                HEBRON ENTERPRISES
+              </h1>
+              <div className="flex items-center justify-center gap-1 sm:gap-1.5 mt-0.5">
+                <span className="text-amber-400 text-[8px] sm:text-[10px]">★</span>
+                <span className="text-white text-[7px] sm:text-[10px] md:text-[11px] font-bold tracking-widest uppercase text-blue-100 whitespace-nowrap">
+                  AUTHORISED MAIN DEALER
+                </span>
+                <span className="text-amber-400 text-[8px] sm:text-[10px]">★</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Actions */}
+          <div className="flex items-center justify-end gap-1.5 sm:gap-2">
             {/* Language */}
-            <div className="relative hidden sm:block">
+            <div className="relative hidden lg:block">
               <button
                 onClick={() => setLangOpen(!langOpen)}
-                className="flex items-center gap-1 text-white hover:text-blue-200 text-sm px-2 py-2 rounded transition-colors"
+                className="flex items-center gap-1 text-white hover:text-amber-300 text-xs px-2 py-1.5 rounded transition-colors"
               >
                 <GlobeIcon size={16} />
-                <span className="hidden lg:inline">{languages.find(l => l.code === language)?.label}</span>
+                <span>{languages.find(l => l.code === language)?.label}</span>
                 <ChevronDownIcon size={12} />
               </button>
               {langOpen && (
@@ -90,7 +105,7 @@ export default function Header({
                     <button
                       key={lang.code}
                       onClick={() => { onLanguageChange(lang.code); setLangOpen(false); }}
-                      className={`w-full text-left px-4 py-2 text-sm hover:bg-blue-50 transition-colors ${language === lang.code ? 'text-blue-700 font-medium' : 'text-gray-700'}`}
+                      className={`w-full text-left px-4 py-2 text-xs hover:bg-blue-50 transition-colors ${language === lang.code ? 'text-blue-700 font-bold' : 'text-gray-700'}`}
                     >
                       {lang.label}
                     </button>
@@ -104,25 +119,23 @@ export default function Header({
               {user ? (
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex items-center gap-2 bg-blue-900/60 hover:bg-blue-900 text-white text-xs font-medium px-3 py-1.5 rounded-lg border border-blue-500/40 transition-colors"
+                  className="flex items-center gap-2 bg-blue-900/80 hover:bg-blue-900 text-white text-xs font-medium px-3 py-1.5 rounded-lg border border-blue-500/50 transition-colors"
                 >
                   <div className="w-6 h-6 rounded-full bg-amber-400 text-gray-900 font-bold flex items-center justify-center text-xs">
                     {user.name.charAt(0).toUpperCase()}
                   </div>
-                  <div className="text-left hidden lg:block">
+                  <div className="text-left hidden xl:block">
                     <p className="font-bold leading-tight line-clamp-1">{user.name.split(' ')[0]}</p>
-                    <p className="text-[9px] text-blue-200">
-                      My Account
-                    </p>
+                    <p className="text-[9px] text-amber-300">My Account</p>
                   </div>
                   <ChevronDownIcon size={12} />
                 </button>
               ) : (
                 <button
                   onClick={() => onAuthOpen('login')}
-                  className="flex items-center gap-1.5 text-white hover:text-blue-200 text-xs font-semibold px-3 py-2 rounded-lg bg-blue-800/50 hover:bg-blue-800 border border-blue-600 transition-colors"
+                  className="flex items-center gap-1.5 text-white hover:text-amber-300 text-xs font-semibold px-3 py-1.5 rounded-lg bg-blue-900/60 hover:bg-blue-800 border border-blue-600 transition-colors"
                 >
-                  <UserIcon size={16} />
+                  <UserIcon size={15} />
                   <span>Login / Register</span>
                 </button>
               )}
@@ -168,75 +181,65 @@ export default function Header({
               )}
             </div>
 
-
             {/* Wishlist */}
-            <button onClick={onWishlistOpen} className="relative flex items-center gap-1 text-white hover:text-blue-200 px-2 py-2 rounded transition-colors">
+            <button onClick={onWishlistOpen} className="relative flex items-center justify-center p-2 text-white hover:text-amber-300 rounded transition-colors" title="Wishlist">
               <HeartIcon size={20} />
               {wishlistCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center shadow-xs">
                   {wishlistCount}
                 </span>
               )}
             </button>
 
             {/* Cart */}
-            <button onClick={onCartOpen} className="relative flex items-center gap-1.5 bg-amber-400 hover:bg-amber-500 text-gray-900 text-sm font-medium px-3 py-2 rounded-lg transition-colors">
+            <button onClick={onCartOpen} className="relative flex items-center gap-1.5 bg-amber-400 hover:bg-amber-500 text-gray-950 text-xs sm:text-sm font-bold px-3 py-1.5 sm:py-2 rounded-lg transition-colors shadow-md">
               <CartIcon size={18} />
               <span className="hidden sm:inline">Cart</span>
               {cartCount > 0 && (
-                <span className="bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                <span className="bg-red-600 text-white text-[10px] font-bold rounded-full w-4.5 h-4.5 flex items-center justify-center">
                   {cartCount}
                 </span>
               )}
             </button>
 
-            {/* Mobile menu */}
-            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden text-white p-2">
-              {mobileMenuOpen ? <CloseIcon size={20} /> : <MenuIcon size={20} />}
+            {/* Mobile menu toggle */}
+            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden text-white p-1.5">
+              {mobileMenuOpen ? <CloseIcon size={22} /> : <MenuIcon size={22} />}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile search bar & category quick strip */}
-      <div className="md:hidden bg-blue-900 border-b border-blue-800 px-3 py-2">
-        <form onSubmit={handleSearch} className="flex rounded-lg overflow-hidden border border-blue-600 bg-white">
-          <input
-            type="text"
-            placeholder="Search pumps, pipes, motors..."
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-            className="flex-1 px-3 py-1.5 text-xs text-gray-800 outline-none placeholder-gray-400"
-          />
-          <button type="submit" className="px-3 bg-amber-400 text-gray-900 flex items-center justify-center">
-            <SearchIcon size={14} />
-          </button>
-        </form>
-
-        <div className="flex flex-wrap items-center justify-center gap-1.5 mt-2 pt-0.5 pb-0.5">
-          {categories.map(cat => (
-            <button
-              key={cat.id}
-              onClick={() => onCategorySelect(cat.id)}
-              className="text-[10px] text-blue-100 hover:text-white bg-blue-800/80 hover:bg-blue-700 px-2 py-0.5 rounded-full whitespace-nowrap transition-colors flex items-center gap-1 font-semibold uppercase"
-            >
-              <span>{cat.icon}</span> {cat.name}
+      {/* Row 2: Main Search Bar */}
+      <div className="bg-blue-900/60 border-b border-blue-700/60 px-4 py-2 flex items-center justify-center">
+        <form onSubmit={handleSearch} className="w-full max-w-3xl flex">
+          <div className="flex w-full rounded-xl overflow-hidden border-2 border-sky-300/80 focus-within:border-amber-400 transition-colors shadow-md">
+            <input
+              type="text"
+              placeholder="Search Hebron Enterprises for C.R.I. pumps, motors, pipes..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              className="flex-1 px-4 py-2 text-xs sm:text-sm outline-none bg-white text-gray-900 placeholder-gray-500"
+            />
+            <button type="submit" className="px-5 bg-amber-400 hover:bg-amber-500 transition-colors text-gray-950 font-bold text-xs sm:text-sm flex items-center gap-1.5">
+              <SearchIcon size={18} />
+              <span className="hidden sm:inline">Search</span>
             </button>
-          ))}
-        </div>
+          </div>
+        </form>
       </div>
 
-      {/* Category nav (desktop) - All 15 categories fully displayed without sliding or dropdown */}
-      <div className="border-b border-blue-700 hidden md:block bg-blue-950/40 py-2 w-full">
+      {/* Category Navigation (Desktop) */}
+      <div className="border-b border-blue-700/60 hidden md:block bg-blue-950/70 py-1.5 w-full">
         <div className="w-full px-4 sm:px-6 md:px-8">
-          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 lg:gap-x-6">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 lg:gap-x-6">
             {categories.map(cat => (
               <button
                 key={cat.id}
                 onClick={() => onCategorySelect(cat.id)}
-                className="text-blue-100 hover:text-amber-300 text-[11px] lg:text-xs font-bold tracking-wider py-1 px-1.5 whitespace-nowrap transition-colors uppercase border-b-2 border-transparent hover:border-amber-300"
+                className="text-blue-100 hover:text-amber-300 text-[11px] lg:text-xs font-bold tracking-wider py-1 px-1 whitespace-nowrap transition-colors uppercase border-b-2 border-transparent hover:border-amber-300 flex items-center gap-1"
               >
-                {cat.name}
+                <span>{cat.icon}</span> {cat.name}
               </button>
             ))}
           </div>
@@ -249,6 +252,10 @@ export default function Header({
           <div className="fixed inset-0 bg-black/40 z-40 md:hidden backdrop-blur-xs" onClick={() => setMobileMenuOpen(false)} />
           <div className="md:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-200 shadow-2xl z-50 max-h-[80vh] overflow-y-auto animate-fade-in">
             <div className="p-4 space-y-1">
+              <div className="bg-gradient-to-r from-amber-500 to-amber-400 p-3 rounded-xl text-gray-950 font-extrabold text-center mb-3 shadow-sm">
+                <p className="text-sm tracking-wider uppercase">HEBRON ENTERPRISES</p>
+                <p className="text-[10px] font-bold text-gray-900 tracking-widest uppercase mt-0.5">Authorised Main Dealer — C.R.I. Pumps</p>
+              </div>
               <div className="flex items-center justify-between pb-3 mb-2 border-b border-gray-100">
                 {user ? (
                   <div className="flex items-center gap-2">
