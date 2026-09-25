@@ -42,8 +42,8 @@ export default function Header({
   };
 
   return (
-    <header className="sticky top-0 z-50 shadow-xl" style={{ background: 'var(--primary)' }}>
-      {/* 1. TOPMOST BLUE PART: ONLY "HEBRON ENTERPRISES — AUTHORISED DEALER" (LITTLE BIGGER) */}
+    <header className="w-full relative">
+      {/* 1. TOPMOST BLUE PART: ONLY "HEBRON ENTERPRISES — AUTHORISED DEALER" (SCROLLS NORMALLY) */}
       <div className="bg-[#0284c7] text-white border-b border-sky-600 py-3 sm:py-3.5 px-4 text-center shadow-md">
         <div className="max-w-7xl mx-auto flex items-center justify-center gap-2">
           <span className="text-amber-300 text-sm sm:text-lg lg:text-xl font-black tracking-widest uppercase font-sans drop-shadow-xs">
@@ -52,8 +52,8 @@ export default function Header({
         </div>
       </div>
 
-      {/* 2. C.R.I. PUMPS LOGO ROW WITH SEARCH BAR IN CENTER COLUMN */}
-      <div className="bg-white border-b border-gray-200 px-3 sm:px-6 py-3 shadow-sm">
+      {/* 2. ONLY THE C.R.I. PUMPS LOGO CARD IS STICKY AT TOP:0 WITH Z-INDEX 50 */}
+      <div className="sticky top-0 z-50 bg-white border-b border-gray-200 px-3 sm:px-6 py-3 shadow-md">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-6">
           
           {/* Left Column: C.R.I. PUMP LOGO */}
