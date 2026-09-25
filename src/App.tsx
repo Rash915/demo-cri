@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
+import AwardBanner from './components/AwardBanner';
 import Categories from './components/Categories';
 import FeaturedProducts from './components/FeaturedProducts';
 import LatestOffers from './components/LatestOffers';
