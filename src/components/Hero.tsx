@@ -24,14 +24,14 @@ export default function Hero({ onShopNow, onCategorySelect }: HeroProps) {
         <div className="flex-1 text-white animate-fade-in text-center sm:text-left">
           <div className="inline-flex items-center gap-2 bg-amber-400/90 text-gray-950 text-xs sm:text-sm font-extrabold px-4 py-1.5 rounded-full mb-4 sm:mb-6 shadow-md border border-amber-300">
             <span className="w-2 h-2 bg-blue-900 rounded-full animate-pulse"></span>
-            HEBRON ENTERPRISES — AUTHORISED MAIN DEALER OF C.R.I. PUMPS
+            HEBRON ENTERPRISES — AUTHORISED DEALER OF C.R.I. PUMPS
           </div>
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-4" style={{ fontFamily: 'DM Serif Display, serif' }}>
             Powering Water.<br />
             <span className="text-amber-300">Empowering Life.</span>
           </h1>
           <p className="text-blue-100 text-sm sm:text-lg lg:text-xl mb-6 sm:mb-8 max-w-xl leading-relaxed mx-auto sm:mx-0">
-            Welcome to <strong>Hebron Enterprises</strong>, the main authorised dealer for C.R.I. Pumps — serving 5 million+ farmers, homes, and industries with 100% genuine pumps & factory warranty.
+            Welcome to <strong>Hebron Enterprises</strong>, the authorised dealer for C.R.I. Pumps — serving 5 million+ farmers, homes, and industries with 100% genuine pumps & factory warranty.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center sm:justify-start">
             <button
