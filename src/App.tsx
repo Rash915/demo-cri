@@ -126,7 +126,7 @@ export default function App() {
   const cartCount = cartItems.reduce((sum, i) => sum + i.qty, 0);
 
   return (
-    <div className="w-full min-h-screen m-0 p-0 pb-14 md:pb-0 relative overflow-x-hidden" style={{ background: 'var(--background)' }}>
+    <div className="w-full min-h-screen m-0 p-0 pb-14 md:pb-0 relative overflow-x-clip" style={{ background: 'var(--background)' }}>
       <Header
         cartCount={cartCount}
         wishlistCount={wishlist.length}

@@ -42,7 +42,7 @@ export default function Header({
   };
 
   return (
-    <header className="w-full relative">
+    <>
       {/* 1. TOPMOST BLUE PART: ONLY "HEBRON ENTERPRISES — AUTHORISED DEALER" (SCROLLS NORMALLY) */}
       <div className="bg-[#0284c7] text-white border-b border-sky-600 py-3 sm:py-3.5 px-4 text-center shadow-md">
         <div className="max-w-7xl mx-auto flex items-center justify-center gap-2">
@@ -53,7 +53,7 @@ export default function Header({
       </div>
 
       {/* 2. ONLY THE C.R.I. PUMPS LOGO CARD IS STICKY AT TOP:0 WITH Z-INDEX 50 */}
-      <div className="sticky top-0 z-50 bg-white border-b border-gray-200 px-3 sm:px-6 py-3 shadow-md">
+      <header className="sticky top-0 z-50 bg-white border-b border-gray-200 px-3 sm:px-6 py-3 shadow-md">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-6">
           
           {/* Left Column: C.R.I. PUMP LOGO */}
@@ -156,7 +156,67 @@ export default function Header({
             )}
           </div>
         </div>
-      </div>
+
+        {/* Mobile menu drawer */}
+        {mobileMenuOpen && (
+          <>
+            <div className="fixed inset-0 bg-black/40 z-40 md:hidden backdrop-blur-xs" onClick={() => setMobileMenuOpen(false)} />
+            <div className="md:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-200 shadow-2xl z-50 max-h-[80vh] overflow-y-auto animate-fade-in">
+              <div className="p-4 space-y-1">
+                <div className="bg-gradient-to-r from-amber-500 to-amber-400 p-3 rounded-xl text-gray-950 font-extrabold text-center mb-3 shadow-sm">
+                  <p className="text-sm tracking-wider uppercase">HEBRON ENTERPRISES</p>
+                  <p className="text-[10px] font-bold text-gray-900 tracking-widest uppercase mt-0.5">Authorised Main Dealer — C.R.I. Pumps</p>
+                </div>
+                <div className="flex items-center justify-between pb-3 mb-2 border-b border-gray-100">
+                  {user ? (
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-full bg-amber-400 text-gray-900 font-bold flex items-center justify-center text-sm shadow-xs">
+                        {user.name.charAt(0).toUpperCase()}
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-gray-900 line-clamp-1">{user.name}</p>
+                        <button onClick={() => { setMobileMenuOpen(false); onLogout(); }} className="text-[10px] text-red-600 font-semibold underline">
+                          Log out
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <button 
+                      onClick={() => { setMobileMenuOpen(false); onAuthOpen('login'); }}
+                      className="flex items-center gap-2 text-blue-700 font-bold text-sm bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200"
+                    >
+                      <UserIcon size={18} /> Login / Register
+                    </button>
+                  )}
+                  <div className="flex items-center gap-2">
+                    <span className="text-gray-500 flex items-center"><GlobeIcon size={16} /></span>
+                    <select
+                      value={language}
+                      onChange={e => onLanguageChange(e.target.value)}
+                      className="text-xs bg-gray-100 rounded px-2 py-1 text-gray-700 outline-none"
+                    >
+                      {languages.map(l => (
+                        <option key={l.code} value={l.code}>{l.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider px-3 pt-2 pb-1">All Categories</p>
+                {categories.map(cat => (
+                  <button
+                    key={cat.id}
+                    onClick={() => { onCategorySelect(cat.id); setMobileMenuOpen(false); }}
+                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-50 text-gray-700 text-sm text-left transition-colors"
+                  >
+                    <span className="text-lg">{cat.icon}</span>
+                    <span className="font-medium">{cat.name}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
+      </header>
 
       {/* 3. AWARD PHOTO BANNER */}
       <AwardBanner />
@@ -177,66 +237,6 @@ export default function Header({
           </div>
         </div>
       </div>
-
-      {/* Mobile menu drawer */}
-      {mobileMenuOpen && (
-        <>
-          <div className="fixed inset-0 bg-black/40 z-40 md:hidden backdrop-blur-xs" onClick={() => setMobileMenuOpen(false)} />
-          <div className="md:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-200 shadow-2xl z-50 max-h-[80vh] overflow-y-auto animate-fade-in">
-            <div className="p-4 space-y-1">
-              <div className="bg-gradient-to-r from-amber-500 to-amber-400 p-3 rounded-xl text-gray-950 font-extrabold text-center mb-3 shadow-sm">
-                <p className="text-sm tracking-wider uppercase">HEBRON ENTERPRISES</p>
-                <p className="text-[10px] font-bold text-gray-900 tracking-widest uppercase mt-0.5">Authorised Main Dealer — C.R.I. Pumps</p>
-              </div>
-              <div className="flex items-center justify-between pb-3 mb-2 border-b border-gray-100">
-                {user ? (
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-amber-400 text-gray-900 font-bold flex items-center justify-center text-sm shadow-xs">
-                      {user.name.charAt(0).toUpperCase()}
-                    </div>
-                    <div>
-                      <p className="text-xs font-bold text-gray-900 line-clamp-1">{user.name}</p>
-                      <button onClick={() => { setMobileMenuOpen(false); onLogout(); }} className="text-[10px] text-red-600 font-semibold underline">
-                        Log out
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <button 
-                    onClick={() => { setMobileMenuOpen(false); onAuthOpen('login'); }}
-                    className="flex items-center gap-2 text-blue-700 font-bold text-sm bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200"
-                  >
-                    <UserIcon size={18} /> Login / Register
-                  </button>
-                )}
-                <div className="flex items-center gap-2">
-                  <span className="text-gray-500 flex items-center"><GlobeIcon size={16} /></span>
-                  <select
-                    value={language}
-                    onChange={e => onLanguageChange(e.target.value)}
-                    className="text-xs bg-gray-100 rounded px-2 py-1 text-gray-700 outline-none"
-                  >
-                    {languages.map(l => (
-                      <option key={l.code} value={l.code}>{l.label}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-wider px-3 pt-2 pb-1">All Categories</p>
-              {categories.map(cat => (
-                <button
-                  key={cat.id}
-                  onClick={() => { onCategorySelect(cat.id); setMobileMenuOpen(false); }}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-50 text-gray-700 text-sm text-left transition-colors"
-                >
-                  <span className="text-lg">{cat.icon}</span>
-                  <span className="font-medium">{cat.name}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </>
-      )}
-    </header>
+    </>
   );
 }
