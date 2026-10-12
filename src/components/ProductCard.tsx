@@ -70,7 +70,12 @@ export default function ProductCard({ product, isWishlisted, onAddToCart, onTogg
 
         {/* Specs chips */}
         <div className="flex flex-wrap gap-1 mb-3">
-          {product.specs.slice(0, 2).map(spec => (
+          {product.productCode && (
+            <span className="text-[9px] sm:text-[10px] bg-amber-50 text-amber-900 px-1.5 py-0.5 rounded font-bold border border-amber-200">
+              #{product.productCode}
+            </span>
+          )}
+          {product.specs.filter(s => !s.startsWith('Code:')).slice(0, 2).map(spec => (
             <span key={spec} className="text-[9px] sm:text-[10px] bg-blue-50 text-blue-700 px-1.5 sm:px-2 py-0.5 rounded-full font-medium border border-blue-100 truncate max-w-full">
               {spec}
             </span>

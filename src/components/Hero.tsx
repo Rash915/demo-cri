@@ -41,7 +41,7 @@ export default function Hero({ onShopNow, onCategorySelect }: HeroProps) {
               Shop Now
             </button>
             <button
-              onClick={() => onCategorySelect('agri-pumps')}
+              onClick={() => onCategorySelect('agri')}
               className="w-full sm:w-auto px-8 py-3.5 bg-white/15 hover:bg-white/25 text-white font-medium rounded-lg transition-all border border-white/40 text-sm sm:text-base backdrop-blur-sm text-center"
             >
               Explore Pumps

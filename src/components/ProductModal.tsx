@@ -80,16 +80,28 @@ export default function ProductModal({
             {product.name}
           </h2>
 
-          <div className="flex items-baseline gap-2 mb-4">
+          {product.productCode && (
+            <div className="flex items-center gap-2 mb-2 text-xs">
+              <span className="font-mono bg-amber-100 text-amber-900 px-2 py-0.5 rounded font-bold">
+                Product Code: #{product.productCode}
+              </span>
+              <span className="text-gray-500">• {product.subcategory}</span>
+            </div>
+          )}
+
+          <div className="flex items-baseline gap-2 mb-3">
             <span className="text-2xl font-bold text-blue-700">₹{product.price.toLocaleString('en-IN')}</span>
-            {product.originalPrice && (
-              <span className="text-sm text-gray-400 line-through">₹{product.originalPrice.toLocaleString('en-IN')}</span>
+            <span className="text-xs text-gray-500 font-medium">List Price</span>
+            {product.rcpPrice && (
+              <span className="text-xs text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                RCP: ₹{product.rcpPrice.toLocaleString('en-IN')}
+              </span>
             )}
-            <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded-full border border-green-200">In Stock</span>
+            <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded-full border border-green-200 ml-auto">In Stock</span>
           </div>
 
           <p className="text-xs sm:text-sm text-gray-600 leading-relaxed mb-4">
-            Heavy-duty CRI engineering design suited for high efficiency performance and long-lasting durability across varied water flow conditions.
+            Official C.R.I. verified agricultural & domestic pump model engineered for Indian farming and water distribution conditions.
           </p>
 
           {/* Specs */}

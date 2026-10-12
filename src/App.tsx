@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
-import AwardBanner from './components/AwardBanner';
-import Categories from './components/Categories';
+import CategoryNavBar from './components/CategoryNavBar';
 import FeaturedProducts from './components/FeaturedProducts';
 import LatestOffers from './components/LatestOffers';
 import WhyCRI from './components/WhyCRI';
@@ -15,13 +14,14 @@ import WishlistSidebar from './components/WishlistSidebar';
 import ProductModal from './components/ProductModal';
 import MobileBottomNav from './components/MobileBottomNav';
 import AuthModal, { UserProfile } from './components/AuthModal';
-import { Product } from './data';
+import { Product, categories } from './data';
 
 type Page = 'home' | 'category' | 'search';
 
 export default function App() {
   const [page, setPage] = useState<Page>('home');
-  const [selectedCategory, setSelectedCategory] = useState<string>('agri-pumps');
+  const [selectedCategory, setSelectedCategory] = useState<string>('agri');
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [wishlist, setWishlist] = useState<string[]>([]);
@@ -29,6 +29,47 @@ export default function App() {
   const [wishlistOpen, setWishlistOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [language, setLanguage] = useState('en');
+
+  // Sync state with URL hash for real page navigation and browser back/forward support
+  useEffect(() => {
+    const handleHash = () => {
+      const rawHash = window.location.hash.replace(/^#\/?/, '');
+      if (!rawHash || rawHash === 'home') {
+        setPage('home');
+        document.title = 'Hebron Enterprises — Authorised C.R.I. Pumps Dealer';
+      } else if (rawHash.startsWith('category')) {
+        const parts = rawHash.split('?');
+        const pathPart = parts[0];
+        const searchPart = parts[1] || '';
+        const catSegment = pathPart.replace(/^category\/?/, '').trim();
+        const validCat = catSegment === 'all' ? 'all' : catSegment === 'agri-pumps' ? 'agri' : catSegment === 'home-pumps' ? 'residential' : catSegment || 'agri';
+        
+        const params = new URLSearchParams(searchPart);
+        const sub = params.get('sub') ? decodeURIComponent(params.get('sub')!) : 'All';
+        
+        setSelectedCategory(validCat);
+        setSelectedSubcategory(sub);
+        setPage('category');
+
+        const catObj = categories.find(c => c.id === validCat);
+        document.title = validCat === 'all'
+          ? 'All C.R.I. Pumps & Products | Hebron Enterprises'
+          : catObj 
+          ? `C.R.I. ${catObj.name} Pumps & Systems | Official Rate Contract | Hebron Enterprises`
+          : 'C.R.I. Pumps Department | Hebron Enterprises';
+      } else if (rawHash.startsWith('search')) {
+        const params = new URLSearchParams(rawHash.split('?')[1] || '');
+        const q = params.get('q') || '';
+        setSearchQuery(q);
+        setPage('search');
+        document.title = `Search: "${q}" | Hebron Enterprises`;
+      }
+    };
+
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
 
   // Auth & User Session State
   const [user, setUser] = useState<UserProfile | null>(() => {
@@ -100,17 +141,22 @@ export default function App() {
     });
   };
 
-  const handleCategorySelect = (id: string) => {
-    setSelectedCategory(id);
+  const handleCategorySelect = (id: string, subcategory: string = 'All') => {
+    const validId = id === 'all' ? 'all' : id === 'agri-pumps' ? 'agri' : id === 'home-pumps' ? 'residential' : id;
+    setSelectedCategory(validId);
+    setSelectedSubcategory(subcategory);
     setSearchQuery('');
     setPage('category');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const subParam = subcategory && subcategory !== 'All' ? `?sub=${encodeURIComponent(subcategory)}` : '';
+    window.location.hash = `/category/${validId}${subParam}`;
+    window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
   const handleSearch = (q: string) => {
     setSearchQuery(q);
     setPage('search');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.location.hash = `/search?q=${encodeURIComponent(q)}`;
+    window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
   const handleProductClick = (product: Product) => {
@@ -120,7 +166,8 @@ export default function App() {
   const handleHome = () => {
     setPage('home');
     setSearchQuery('');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.location.hash = '/home';
+    window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
   const cartCount = cartItems.reduce((sum, i) => sum + i.qty, 0);
@@ -128,6 +175,8 @@ export default function App() {
   return (
     <div className="w-full min-h-screen m-0 p-0 pb-14 md:pb-0 relative overflow-x-clip" style={{ background: 'var(--background)' }}>
       <Header
+        currentPage={page}
+        activeCategory={page === 'category' ? selectedCategory : undefined}
         cartCount={cartCount}
         wishlistCount={wishlist.length}
         onCartOpen={() => setCartOpen(true)}
@@ -155,9 +204,9 @@ export default function App() {
       <main>
         {page === 'home' && (
           <>
-            <Hero onShopNow={() => handleCategorySelect('agri-pumps')} onCategorySelect={handleCategorySelect} />
+            <CategoryNavBar onCategorySelect={handleCategorySelect} activeCategory={selectedCategory} />
+            <Hero onShopNow={() => handleCategorySelect('agri')} onCategorySelect={handleCategorySelect} />
             <Stats />
-            <Categories onSelect={handleCategorySelect} />
             <FeaturedProducts
               wishlist={wishlist}
               onAddToCart={handleAddToCart}
@@ -173,16 +222,20 @@ export default function App() {
         {page === 'category' && (
           <CategoryPage
             categoryId={selectedCategory}
+            initialSubcategory={selectedSubcategory}
             wishlist={wishlist}
             onAddToCart={handleAddToCart}
             onToggleWishlist={handleToggleWishlist}
             onProductClick={handleProductClick}
+            onBackToHome={handleHome}
+            onCategoryChange={handleCategorySelect}
           />
         )}
 
         {page === 'search' && (
           <CategoryPage
             categoryId=""
+            initialSubcategory="All"
             wishlist={wishlist}
             onAddToCart={handleAddToCart}
             onToggleWishlist={handleToggleWishlist}
@@ -199,7 +252,7 @@ export default function App() {
         cartCount={cartCount}
         wishlistCount={wishlist.length}
         onHomeClick={handleHome}
-        onCategoryClick={() => handleCategorySelect('agri-pumps')}
+        onCategoryClick={() => handleCategorySelect('agri')}
         onCartClick={() => setCartOpen(true)}
         onWishlistClick={() => setWishlistOpen(true)}
         onAccountClick={() => {

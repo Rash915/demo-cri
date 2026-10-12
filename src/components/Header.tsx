@@ -5,11 +5,13 @@ import { UserProfile } from './AuthModal';
 import AwardBanner from './AwardBanner';
 
 interface HeaderProps {
+  currentPage?: string;
+  activeCategory?: string;
   cartCount: number;
   wishlistCount: number;
   onCartOpen: () => void;
   onWishlistOpen: () => void;
-  onCategorySelect: (id: string) => void;
+  onCategorySelect: (id: string, subcategory?: string) => void;
   onSearch: (q: string) => void;
   language: string;
   onLanguageChange: (lang: string) => void;
@@ -27,6 +29,8 @@ const languages = [
 ];
 
 export default function Header({
+  currentPage = 'home',
+  activeCategory,
   cartCount, wishlistCount, onCartOpen, onWishlistOpen,
   onCategorySelect, onSearch, language, onLanguageChange, onHome,
   user, onAuthOpen, onLogout, onShowOrders
@@ -35,6 +39,8 @@ export default function Header({
   const [langOpen, setLangOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [categorySidebarOpen, setCategorySidebarOpen] = useState(false);
+  const [expandedCategory, setExpandedCategory] = useState<string | null>('agri');
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,18 +62,33 @@ export default function Header({
       <header className="sticky top-0 z-50 bg-white border-b border-gray-200 px-3 sm:px-6 py-3 shadow-md">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-6">
           
-          {/* Left Column: C.R.I. PUMP LOGO */}
-          <div className="flex items-center justify-between w-full md:w-auto shrink-0">
-            <button onClick={onHome} className="flex flex-col items-start group focus:outline-none">
-              <img 
-                src="https://www.crifluidsystems.com/za/wp-content/uploads/2021/02/cri-logo-new.png" 
-                alt="C.R.I. Pumps Logo" 
-                className="h-8 sm:h-11 w-auto object-contain transition-transform group-hover:scale-105"
-              />
-              <span className="text-[9px] sm:text-[10px] text-red-700 font-extrabold italic tracking-tight">
-                Pumping trust... Worldwide.
-              </span>
-            </button>
+          {/* Left Column: C.R.I. PUMP LOGO + SIDE TOGGLE BAR */}
+          <div className="flex items-center justify-between w-full md:w-auto shrink-0 gap-2 sm:gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
+              {/* SIDE TOGGLE BAR BUTTON */}
+              <button
+                type="button"
+                onClick={() => setCategorySidebarOpen(true)}
+                className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 bg-sky-50 hover:bg-sky-100 text-sky-950 border border-sky-200 hover:border-sky-300 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-xs cursor-pointer group shrink-0"
+                title="Browse All Categories & Ranges"
+                aria-label="Toggle Categories Sidebar"
+              >
+                <span className="text-base sm:text-lg group-hover:scale-110 transition-transform">☰</span>
+                <span className="font-extrabold tracking-wide hidden sm:inline">View Categories</span>
+              </button>
+
+              {/* C.R.I. PUMPS LOGO */}
+              <button onClick={onHome} className="flex flex-col items-start group focus:outline-none">
+                <img 
+                  src="https://www.crifluidsystems.com/za/wp-content/uploads/2021/02/cri-logo-new.png" 
+                  alt="C.R.I. Pumps Logo" 
+                  className="h-8 sm:h-11 w-auto object-contain transition-transform group-hover:scale-105"
+                />
+                <span className="text-[9px] sm:text-[10px] text-red-700 font-extrabold italic tracking-tight">
+                  Pumping trust... Worldwide.
+                </span>
+              </button>
+            </div>
 
             {/* Mobile Actions Toggle */}
             <div className="flex items-center gap-2 md:hidden">
@@ -218,25 +239,162 @@ export default function Header({
         )}
       </header>
 
-      {/* 3. AWARD PHOTO BANNER */}
-      <AwardBanner />
+      {/* AWARD PHOTO BANNER - PROMINENTLY RESTORED AT TOP ON HOME PAGE */}
+      {currentPage === 'home' && <AwardBanner />}
 
-      {/* 4. CATEGORIES NAVIGATION BAR (FULLY RESPONSIVE TOUCH SCROLL) */}
-      <div className="border-b border-blue-800 bg-[#0284c7] py-2 w-full shadow-inner">
-        <div className="w-full px-2 sm:px-6">
-          <div className="flex items-center gap-2 overflow-x-auto whitespace-nowrap scrollbar-none py-1 justify-start md:justify-center">
-            {categories.map(cat => (
+      {/* CATEGORIES SIDEBAR DRAWER (SLIDE-OUT FROM LEFT) */}
+      {categorySidebarOpen && (
+        <>
+          {/* Backdrop Overlay */}
+          <div
+            className="fixed inset-0 bg-black/60 z-[99] backdrop-blur-xs transition-opacity animate-fade-in"
+            onClick={() => setCategorySidebarOpen(false)}
+          />
+
+          {/* Slide-out Sidebar Panel */}
+          <aside
+            className="fixed top-0 left-0 bottom-0 w-[300px] sm:w-[380px] bg-white z-[100] shadow-2xl flex flex-col overflow-hidden animate-slide-right"
+            aria-label="Categories Sidebar Navigation"
+          >
+            {/* Drawer Header */}
+            <div className="bg-[#0284c7] text-white p-4 sm:p-5 flex items-center justify-between shadow-md">
+              <div className="flex items-center gap-2.5">
+                <span className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center text-lg">
+                  🗂️
+                </span>
+                <div>
+                  <h2 className="text-sm sm:text-base font-extrabold tracking-wide text-white uppercase">
+                    Product Categories
+                  </h2>
+                  <p className="text-[11px] text-sky-100 font-medium">
+                    C.R.I. Pumps & Engineering Solutions
+                  </p>
+                </div>
+              </div>
               <button
-                key={cat.id}
-                onClick={() => onCategorySelect(cat.id)}
-                className="text-white hover:text-amber-300 text-[11px] sm:text-xs font-bold tracking-wider py-1 px-2.5 rounded-md bg-white/10 hover:bg-white/20 transition-colors uppercase flex items-center gap-1.5 shrink-0 border border-white/10"
+                onClick={() => setCategorySidebarOpen(false)}
+                className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer"
+                aria-label="Close categories sidebar"
               >
-                <span>{cat.icon}</span> {cat.name}
+                <CloseIcon size={20} />
               </button>
-            ))}
-          </div>
-        </div>
-      </div>
+            </div>
+
+            {/* Quick Actions Shortcuts */}
+            <div className="p-3 bg-slate-50 border-b border-gray-200 flex items-center gap-2">
+              <button
+                onClick={() => {
+                  onCategorySelect('all');
+                  setCategorySidebarOpen(false);
+                }}
+                className="flex-1 py-2 px-3 rounded-lg bg-white hover:bg-sky-50 text-sky-900 border border-gray-200 hover:border-sky-300 text-xs font-bold text-center transition-all shadow-2xs"
+              >
+                ⚡ View All Products
+              </button>
+              <button
+                onClick={() => {
+                  onCategorySelect('agri');
+                  setCategorySidebarOpen(false);
+                }}
+                className="py-2 px-3 rounded-lg bg-amber-400 hover:bg-amber-500 text-gray-950 text-xs font-bold transition-all shadow-2xs"
+              >
+                📜 TN Rate Contract
+              </button>
+            </div>
+
+            {/* Category List with Nested Subcategories Accordion */}
+            <div className="flex-1 overflow-y-auto p-3 space-y-2.5 scrollbar-thin">
+              {categories.map(cat => {
+                const isExpanded = expandedCategory === cat.id;
+                const isActive = activeCategory === cat.id;
+                return (
+                  <div
+                    key={cat.id}
+                    className={`rounded-xl border transition-all overflow-hidden ${
+                      isActive
+                        ? 'border-sky-400 bg-sky-50/50 shadow-xs'
+                        : 'border-gray-200 bg-white hover:border-gray-300'
+                    }`}
+                  >
+                    {/* Category Item Main Row */}
+                    <div className="p-3 flex items-center justify-between gap-2">
+                      <button
+                        onClick={() => {
+                          onCategorySelect(cat.id);
+                          setCategorySidebarOpen(false);
+                        }}
+                        className="flex items-center gap-2.5 text-left flex-1 group/item cursor-pointer"
+                      >
+                        <span className="text-2xl shrink-0 group-hover/item:scale-110 transition-transform">
+                          {cat.icon}
+                        </span>
+                        <div>
+                          <p className={`text-xs sm:text-sm font-bold transition-colors ${
+                            isActive ? 'text-sky-900' : 'text-gray-900 group-hover/item:text-sky-700'
+                          }`}>
+                            {cat.name} Pumps
+                          </p>
+                          <p className="text-[10px] text-gray-500 font-medium">
+                            {cat.subcategories.length} ranges available
+                          </p>
+                        </div>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setExpandedCategory(prev => prev === cat.id ? null : cat.id)}
+                        className="w-7 h-7 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-500 transition-colors cursor-pointer"
+                        title={isExpanded ? 'Collapse subcategories' : 'Expand subcategories'}
+                      >
+                        <span className={`text-[10px] transform transition-transform duration-200 ${
+                          isExpanded ? 'rotate-180' : ''
+                        }`}>
+                          ▼
+                        </span>
+                      </button>
+                    </div>
+
+                    {/* Subcategories Accordion Content */}
+                    {isExpanded && (
+                      <div className="bg-slate-50/80 px-3 py-2 border-t border-gray-100 space-y-1">
+                        <button
+                          onClick={() => {
+                            onCategorySelect(cat.id, 'All');
+                            setCategorySidebarOpen(false);
+                          }}
+                          className="w-full text-left py-1.5 px-2.5 rounded-md text-[11px] font-bold text-sky-700 hover:bg-sky-100 transition-colors flex items-center justify-between"
+                        >
+                          <span>All {cat.name} Models</span>
+                          <span>→</span>
+                        </button>
+                        {cat.subcategories.map(sub => (
+                          <button
+                            key={sub}
+                            onClick={() => {
+                              onCategorySelect(cat.id, sub);
+                              setCategorySidebarOpen(false);
+                            }}
+                            className="w-full text-left py-1.5 px-2.5 rounded-md text-[11px] text-gray-700 hover:text-sky-900 hover:bg-white transition-all font-medium flex items-center gap-1.5 border border-transparent hover:border-gray-200 cursor-pointer"
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-sky-400 shrink-0" />
+                            <span className="truncate">{sub}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Drawer Footer */}
+            <div className="p-3.5 bg-slate-100 border-t border-gray-200 text-center text-xs text-gray-600">
+              <p className="font-bold text-gray-900">Hebron Enterprises</p>
+              <p className="text-[11px] text-gray-500 mt-0.5">Authorised Main Dealer • 100% Factory Warranty</p>
+            </div>
+          </aside>
+        </>
+      )}
     </>
   );
 }
