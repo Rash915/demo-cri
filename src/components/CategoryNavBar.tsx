@@ -17,7 +17,7 @@ export default function CategoryNavBar({
       aria-label="C.R.I. Pump Categories"
       className="w-full bg-white border-y-2 border-amber-400 shadow-sm"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-center gap-2 sm:gap-3 py-3 overflow-x-auto scrollbar-none">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 flex items-center justify-start md:justify-center gap-2 sm:gap-3 py-2.5 sm:py-3 overflow-x-auto scrollbar-none touch-pan-x">
         {categories.map((cat) => {
           const isActive = activeCategory === cat.id;
           const isHovered = hoveredId === cat.id;
@@ -33,7 +33,7 @@ export default function CategoryNavBar({
               <button
                 type="button"
                 onClick={() => onCategorySelect(cat.id)}
-                className={`flex items-center gap-2 px-5 sm:px-6 py-2 sm:py-2.5 text-sm sm:text-base font-semibold rounded-lg border-2 transition-all cursor-pointer whitespace-nowrap shadow-xs ${
+                className={`flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-6 py-1.5 sm:py-2.5 text-xs sm:text-base font-semibold rounded-lg border-2 transition-all cursor-pointer whitespace-nowrap shadow-xs ${
                   isActive
                     ? 'bg-sky-600 text-white border-sky-600 shadow-md'
                     : 'bg-white text-sky-800 border-sky-200 hover:border-sky-500 hover:bg-sky-50'

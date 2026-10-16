@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
-import { categories, products, Product, Category } from '../data';
+import { categories, products, Product, Category, tinySubcategoriesMeta } from '../data';
 import ProductCard from './ProductCard';
 import { SearchIcon, CartIcon } from './icons';
+import TinyCatalogOverview from './TinyCatalogOverview';
 
 interface CategoryPageProps {
   categoryId: string;
@@ -52,7 +53,10 @@ export default function CategoryPage({
   const [modelSearch, setModelSearch] = useState<string>('');
   const [selectedPhase, setSelectedPhase] = useState<string>('All');
   const [selectedHpRange, setSelectedHpRange] = useState<string>('All');
-  const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
+  const [viewMode, setViewMode] = useState<'grid' | 'table'>(() => {
+    const norm = getNormalizedId(categoryId);
+    return norm === 'agri' ? 'table' : 'grid';
+  });
   const [sortBy, setSortBy] = useState('Featured');
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 24;
@@ -132,6 +136,11 @@ export default function CategoryPage({
   const handleSelectCategory = (catId: string) => {
     setActiveCategory(catId);
     setSelectedSubcat('All'); // Reset subcategory when switching main category
+    if (catId === 'agri') {
+      setViewMode('table');
+    } else {
+      setViewMode('grid');
+    }
     if (onCategoryChange) {
       onCategoryChange(catId, 'All');
     }
@@ -140,6 +149,14 @@ export default function CategoryPage({
   // Handler for Tier 2 Subcategory Selection
   const handleSelectSubcategory = (subcat: string) => {
     setSelectedSubcat(subcat);
+    if (activeCategory === 'agri') {
+      setViewMode('table');
+    } else {
+      setViewMode('grid');
+    }
+    if (onCategoryChange) {
+      onCategoryChange(activeCategory, subcat);
+    }
   };
 
   const handleFormSubmit = (e: React.FormEvent) => {
@@ -222,6 +239,9 @@ export default function CategoryPage({
     if (selectedHpRange !== 'All') {
       list = list.filter(p => {
         if (!p.hp) return false;
+        if (activeCategory === 'tiny') {
+          return p.hp.toLowerCase().includes(selectedHpRange.toLowerCase().replace(' hp', ''));
+        }
         const hpNum = parseFloat(p.hp.replace(/[^0-9.]/g, ''));
         if (isNaN(hpNum)) return false;
         if (selectedHpRange === '<= 2 HP') return hpNum <= 2;
@@ -233,7 +253,14 @@ export default function CategoryPage({
     }
 
     return list;
-  }, [selectedSubcat, categoryProducts, modelSearch, selectedPhase, selectedHpRange]);
+  }, [activeCategory, selectedSubcat, categoryProducts, modelSearch, selectedPhase, selectedHpRange]);
+
+  const hpOptions = useMemo(() => {
+    if (activeCategory === 'tiny') {
+      return ['All', '0.5 HP', '1 HP', '1.5 HP', '2 HP', '7 HP'];
+    }
+    return ['All', '<= 2 HP', '3 - 5 HP', '7.5 - 10 HP', '>= 12.5 HP'];
+  }, [activeCategory]);
 
   // Sorted products
   const sorted = useMemo(() => {
@@ -298,6 +325,19 @@ export default function CategoryPage({
     );
   }
 
+  // Tiny Main Category Page: show the 14 subcategory cards in clean layout
+  if (activeCategory === 'tiny' && selectedSubcat === 'All') {
+    return (
+      <TinyCatalogOverview
+        subcategories={currentCategoryObj?.subcategories || []}
+        products={categoryProducts}
+        onSelectSubcategory={(subcat) => handleSelectSubcategory(subcat)}
+        onBackToHome={onBackToHome}
+        onViewAllModels={() => handleSelectSubcategory('All-Models')}
+      />
+    );
+  }
+
   return (
     <div className="bg-white min-h-screen pb-16 animate-fade-in">
       {/* 1. TOP BREADCRUMB & DEALER BANNER (COMPACT) */}
@@ -316,20 +356,29 @@ export default function CategoryPage({
             <span className="text-gray-400">/</span>
             <span className="text-gray-500">Categories</span>
             <span className="text-gray-400">/</span>
-            <span className="text-gray-900 font-bold">
-              {activeCategory === 'all' ? 'All Products' : currentCategoryObj?.name || 'Department'}
-            </span>
+            {activeCategory === 'tiny' ? (
+              <button
+                onClick={() => handleSelectSubcategory('All')}
+                className="text-gray-800 hover:text-blue-700 font-bold hover:underline cursor-pointer"
+              >
+                Tiny
+              </button>
+            ) : (
+              <span className="text-gray-900 font-bold">
+                {activeCategory === 'all' ? 'All Products' : currentCategoryObj?.name || 'Department'}
+              </span>
+            )}
             {selectedSubcat !== 'All' && (
               <>
                 <span className="text-gray-400">/</span>
-                <span className="text-blue-700 font-semibold truncate max-w-[200px]">
-                  {selectedSubcat}
+                <span className="text-blue-700 font-bold truncate max-w-[280px]">
+                  {selectedSubcat === 'All-Models' ? 'All Models Table' : selectedSubcat}
                 </span>
               </>
             )}
           </div>
           <div className="hidden sm:flex items-center gap-2 text-gray-600 text-[11px]">
-            <span className="w-2 h-2 rounded-full bg-emerald-500" />
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             <span className="font-semibold text-gray-700">Hebron Enterprises — Authorised C.R.I. Dealer</span>
           </div>
         </div>
@@ -337,35 +386,56 @@ export default function CategoryPage({
 
       {/* 2. PRODUCT LISTING & FILTER TOOLBAR */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pt-5 pb-8">
+        {/* Back Button for Tiny Subcategory Pages */}
+        {activeCategory === 'tiny' && selectedSubcat !== 'All' && (
+          <div className="mb-3.5 flex flex-wrap items-center justify-between gap-2">
+            <button
+              onClick={() => handleSelectSubcategory('All')}
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-800 font-bold text-xs transition-colors border border-blue-200 shadow-2xs cursor-pointer group"
+            >
+              <span className="transition-transform group-hover:-translate-x-1">←</span>
+              <span>Back to Tiny Subcategories</span>
+            </button>
+
+            <span className="text-xs text-gray-500 font-medium">
+              Subcategory: <strong className="text-gray-900 font-bold">{selectedSubcat}</strong>
+            </span>
+          </div>
+        )}
+
         {/* COMPACT CATEGORY OVERVIEW & STATS BAR */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-gray-100">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 mb-4 pb-3 border-b border-gray-100">
           <div>
-            <h1 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center gap-2">
-              <span>{activeCategory === 'all' ? '💧' : currentCategoryObj?.icon || '📦'}</span>
+            <h1 className="text-base sm:text-xl font-bold text-gray-900 flex items-center gap-2 flex-wrap">
+              <span>{activeCategory === 'all' ? '💧' : activeCategory === 'tiny' ? (tinySubcategoriesMeta[selectedSubcat]?.icon || '⚡') : currentCategoryObj?.icon || '📦'}</span>
               <span>
-                C.R.I. {activeCategory === 'all' ? 'All Products' : currentCategoryObj?.name} Pumping Systems
+                {activeCategory === 'tiny' && selectedSubcat !== 'All'
+                  ? `C.R.I. ${selectedSubcat === 'All-Models' ? 'Tiny All Models' : selectedSubcat}`
+                  : `C.R.I. ${activeCategory === 'all' ? 'All Products' : currentCategoryObj?.name} Pumping Systems`}
               </span>
-              {selectedSubcat !== 'All' && (
+              {activeCategory !== 'tiny' && selectedSubcat !== 'All' && (
                 <span className="text-xs font-normal text-gray-500">
                   — {selectedSubcat}
                 </span>
               )}
             </h1>
-            <p className="text-xs text-gray-500 mt-0.5">
-              Official Rate Contract Price Catalogue (Tamil Nadu) • 100% Genuine C.R.I. Factory Warranty
+            <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">
+              {activeCategory === 'tiny' && tinySubcategoriesMeta[selectedSubcat]
+                ? `${tinySubcategoriesMeta[selectedSubcat].tag} • ${tinySubcategoriesMeta[selectedSubcat].description}`
+                : 'Official C.R.I. Price Catalogue (Tamil Nadu) • 100% Genuine C.R.I. Factory Warranty'}
             </p>
           </div>
 
-          <div className="flex items-center gap-2 self-start sm:self-auto text-xs">
+          <div className="flex items-center gap-2 self-start sm:self-auto text-xs shrink-0">
             <span className="text-gray-500">
               Showing <strong className="text-gray-900">{sorted.length}</strong> verified models
             </span>
             {selectedSubcat !== 'All' && (
               <button
-                onClick={() => setSelectedSubcat('All')}
+                onClick={() => handleSelectSubcategory('All')}
                 className="text-xs text-blue-700 hover:text-blue-900 font-semibold underline cursor-pointer ml-1"
               >
-                Reset to All
+                {activeCategory === 'tiny' ? 'All Subcategories' : 'Reset to All'}
               </button>
             )}
           </div>
@@ -373,24 +443,34 @@ export default function CategoryPage({
 
         {/* SUBCATEGORY PILL CHIPS (CLEAN & HORIZONTAL ON CATALOG PAGE) */}
         {tier2Subcategories.length > 0 && (
-          <div className="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap pb-2 mb-3.5 scrollbar-none">
-            <button
-              onClick={() => setSelectedSubcat('All')}
-              className={`px-3 py-1 rounded-full text-xs font-semibold transition-all shrink-0 cursor-pointer ${
-                selectedSubcat === 'All'
-                  ? 'bg-blue-700 text-white shadow-2xs font-bold'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              All {currentCategoryObj?.name || ''} ({categoryProducts.length})
-            </button>
+          <div className="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap pb-2 mb-4 sm:mb-5 scrollbar-none touch-pan-x">
+            {activeCategory === 'tiny' ? (
+              <button
+                onClick={() => handleSelectSubcategory('All')}
+                className="px-3 py-1 rounded-full text-xs font-bold transition-all shrink-0 cursor-pointer bg-slate-100 hover:bg-slate-200 text-gray-800 border border-gray-300 flex items-center gap-1 shadow-2xs"
+              >
+                <span>←</span>
+                <span>14 Subcategories</span>
+              </button>
+            ) : (
+              <button
+                onClick={() => handleSelectSubcategory('All')}
+                className={`px-3 py-1 rounded-full text-xs font-semibold transition-all shrink-0 cursor-pointer ${
+                  selectedSubcat === 'All'
+                    ? 'bg-blue-700 text-white shadow-2xs font-bold'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                All {currentCategoryObj?.name || ''} ({categoryProducts.length})
+              </button>
+            )}
             {tier2Subcategories.map(sub => {
               const isSelected = selectedSubcat === sub;
               const count = subcatCounts[sub] || 0;
               return (
                 <button
                   key={sub}
-                  onClick={() => setSelectedSubcat(sub)}
+                  onClick={() => handleSelectSubcategory(sub)}
                   className={`px-3 py-1 rounded-full text-xs font-semibold transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
                     isSelected
                       ? 'bg-blue-700 text-white shadow-2xs font-bold'
@@ -411,121 +491,123 @@ export default function CategoryPage({
           </div>
         )}
 
-        {/* CONTROLS BAR: SEARCH, PHASE, HP, VIEW MODE, SORT */}
-        <div className="bg-white rounded-xl border border-gray-200 p-3 sm:p-3.5 mb-6 shadow-2xs flex flex-col gap-3">
-          <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
-            {/* Model Search Box */}
-            <div className="relative flex-1 max-w-md">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                <SearchIcon size={16} />
+        {/* CONTROLS BAR: SEARCH, PHASE, HP, VIEW MODE, SORT - Hidden on Tiny models page */}
+        {activeCategory !== 'tiny' && (
+          <div className="bg-white rounded-xl border border-gray-200 p-3 sm:p-3.5 mb-6 shadow-2xs flex flex-col gap-3">
+            <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+              {/* Model Search Box */}
+              <div className="relative flex-1 max-w-md">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                  <SearchIcon size={16} />
+                </div>
+                <input
+                  type="text"
+                  value={modelSearch}
+                  onChange={e => setModelSearch(e.target.value)}
+                  placeholder="Search model name (e.g. RYKER, JUMBO), code (#632635), HP..."
+                  className="w-full pl-9 pr-7 py-2 bg-gray-50 border border-gray-200 rounded-lg text-xs sm:text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-gray-900"
+                />
+                {modelSearch && (
+                  <button
+                    onClick={() => setModelSearch('')}
+                    className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer"
+                  >
+                    ✕
+                  </button>
+                )}
               </div>
-              <input
-                type="text"
-                value={modelSearch}
-                onChange={e => setModelSearch(e.target.value)}
-                placeholder="Search model name (e.g. RYKER, JUMBO), code (#632635), HP..."
-                className="w-full pl-9 pr-7 py-2 bg-gray-50 border border-gray-200 rounded-lg text-xs sm:text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-gray-900"
-              />
-              {modelSearch && (
-                <button
-                  onClick={() => setModelSearch('')}
-                  className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer"
+
+              <div className="flex items-center gap-2.5 justify-between md:justify-end flex-wrap">
+                {/* View Mode Switcher */}
+                <div className="flex bg-gray-100 p-0.5 rounded-lg border border-gray-200 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setViewMode('grid')}
+                    className={`flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer ${
+                      viewMode === 'grid'
+                        ? 'bg-white text-blue-700 shadow-2xs font-bold'
+                        : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                    title="Grid Cards View"
+                  >
+                    <span>▦</span> Cards
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setViewMode('table')}
+                    className={`flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer ${
+                      viewMode === 'table'
+                        ? 'bg-white text-blue-700 shadow-2xs font-bold'
+                        : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                    title="Official Specifications Table"
+                  >
+                    <span>📋</span> Specs Table
+                  </button>
+                </div>
+
+                {/* Sort Selector */}
+                <select
+                  value={sortBy}
+                  onChange={e => setSortBy(e.target.value)}
+                  className="px-2.5 py-1.5 border rounded-lg text-xs sm:text-sm text-gray-700 bg-white border-gray-200 focus:outline-none focus:border-blue-500 shadow-2xs cursor-pointer font-medium"
                 >
-                  ✕
+                  {sortOptions.map(o => (
+                    <option key={o}>{o}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Quick Filters: Phase & HP Pills */}
+            <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-gray-100 text-xs">
+              <span className="text-gray-500 font-semibold mr-0.5">Phase:</span>
+              {['All', '3-Phase', '1-Phase'].map(ph => (
+                <button
+                  key={ph}
+                  onClick={() => setSelectedPhase(ph)}
+                  className={`px-2 py-0.5 rounded-md font-medium transition-all cursor-pointer ${
+                    selectedPhase === ph
+                      ? 'bg-blue-700 text-white font-bold'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  {ph === 'All' ? 'All Phases' : ph}
+                </button>
+              ))}
+
+              <span className="text-gray-300 mx-1.5">|</span>
+
+              <span className="text-gray-500 font-semibold mr-0.5">Power:</span>
+              {hpOptions.map(hp => (
+                <button
+                  key={hp}
+                  onClick={() => setSelectedHpRange(hp)}
+                  className={`px-2 py-0.5 rounded-md font-medium transition-all cursor-pointer ${
+                    selectedHpRange === hp
+                      ? 'bg-blue-700 text-white font-bold'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  {hp}
+                </button>
+              ))}
+
+              {(modelSearch || selectedPhase !== 'All' || selectedHpRange !== 'All') && (
+                <button
+                  onClick={() => {
+                    setModelSearch('');
+                    setSelectedPhase('All');
+                    setSelectedHpRange('All');
+                  }}
+                  className="ml-auto text-xs text-red-600 hover:text-red-800 font-semibold underline cursor-pointer"
+                >
+                  Clear Filters
                 </button>
               )}
             </div>
-
-            <div className="flex items-center gap-2.5 justify-between md:justify-end flex-wrap">
-              {/* View Mode Switcher */}
-              <div className="flex bg-gray-100 p-0.5 rounded-lg border border-gray-200 shrink-0">
-                <button
-                  type="button"
-                  onClick={() => setViewMode('grid')}
-                  className={`flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer ${
-                    viewMode === 'grid'
-                      ? 'bg-white text-blue-700 shadow-2xs font-bold'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                  title="Grid Cards View"
-                >
-                  <span>▦</span> Cards
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setViewMode('table')}
-                  className={`flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer ${
-                    viewMode === 'table'
-                      ? 'bg-white text-blue-700 shadow-2xs font-bold'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                  title="Official Rate Contract Price Table"
-                >
-                  <span>📋</span> Price Table
-                </button>
-              </div>
-
-              {/* Sort Selector */}
-              <select
-                value={sortBy}
-                onChange={e => setSortBy(e.target.value)}
-                className="px-2.5 py-1.5 border rounded-lg text-xs sm:text-sm text-gray-700 bg-white border-gray-200 focus:outline-none focus:border-blue-500 shadow-2xs cursor-pointer font-medium"
-              >
-                {sortOptions.map(o => (
-                  <option key={o}>{o}</option>
-                ))}
-              </select>
-            </div>
           </div>
-
-          {/* Quick Filters: Phase & HP Pills */}
-          <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-gray-100 text-xs">
-            <span className="text-gray-500 font-semibold mr-0.5">Phase:</span>
-            {['All', '3-Phase', '1-Phase'].map(ph => (
-              <button
-                key={ph}
-                onClick={() => setSelectedPhase(ph)}
-                className={`px-2 py-0.5 rounded-md font-medium transition-all cursor-pointer ${
-                  selectedPhase === ph
-                    ? 'bg-blue-700 text-white font-bold'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                {ph === 'All' ? 'All Phases' : ph}
-              </button>
-            ))}
-
-            <span className="text-gray-300 mx-1.5">|</span>
-
-            <span className="text-gray-500 font-semibold mr-0.5">Power:</span>
-            {['All', '<= 2 HP', '3 - 5 HP', '7.5 - 10 HP', '>= 12.5 HP'].map(hp => (
-              <button
-                key={hp}
-                onClick={() => setSelectedHpRange(hp)}
-                className={`px-2 py-0.5 rounded-md font-medium transition-all cursor-pointer ${
-                  selectedHpRange === hp
-                    ? 'bg-blue-700 text-white font-bold'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                {hp}
-              </button>
-            ))}
-
-            {(modelSearch || selectedPhase !== 'All' || selectedHpRange !== 'All') && (
-              <button
-                onClick={() => {
-                  setModelSearch('');
-                  setSelectedPhase('All');
-                  setSelectedHpRange('All');
-                }}
-                className="ml-auto text-xs text-red-600 hover:text-red-800 font-semibold underline cursor-pointer"
-              >
-                Clear Filters
-              </button>
-            )}
-          </div>
-        </div>
+        )}
 
         {/* 4. PRODUCT LISTING DISPLAY */}
         {sorted.length === 0 ? (
@@ -548,15 +630,15 @@ export default function CategoryPage({
             </button>
           </div>
         ) : viewMode === 'table' ? (
-          /* Official Rate Contract Price List Table View */
+          /* Official Model & List Price Table View */
           <div className="bg-white rounded-xl border border-gray-200 shadow-xs overflow-hidden mb-6">
             <div className="p-3.5 bg-sky-50 border-b border-sky-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
               <div>
                 <h3 className="font-bold text-sky-950 flex items-center gap-1.5">
-                  <span>📋</span> Official C.R.I. Rate Contract Price List Table
+                  <span>📋</span> Official C.R.I. Model Specifications & List Price Table
                 </h3>
                 <p className="text-sky-700 mt-0.5 text-[11px]">
-                  Tamil Nadu verified price catalogue w.e.f. 01.08.2026. Displaying verified List Prices matching PDF.
+                  Tamil Nadu verified price catalogue w.e.f. 01.08.2026. Displaying official List Prices.
                 </p>
               </div>
               <span className="font-mono font-bold bg-white text-sky-800 border border-sky-200 px-2.5 py-1 rounded text-[11px] self-start sm:self-auto shadow-2xs">
@@ -571,11 +653,10 @@ export default function CategoryPage({
                     <th className="py-3 px-3">Code</th>
                     <th className="py-3 px-3">Model</th>
                     <th className="py-3 px-2.5">HP</th>
-                    <th className="py-3 px-2.5">Stages</th>
-                    <th className="py-3 px-2.5">Pipe Size</th>
-                    <th className="py-3 px-2.5">Phase / Type</th>
+                    <th className="py-3 px-2.5">Pipe Size (mm)</th>
+                    <th className="py-3 px-2.5">Type</th>
                     <th className="py-3 px-2.5">Head (m)</th>
-                    <th className="py-3 px-2.5">Discharge (LPH)</th>
+                    <th className="py-3 px-2.5">Discharge (lph)</th>
                     <th className="py-3 px-3 text-right">List Price (₹)</th>
                     <th className="py-3 px-3 text-center">Action</th>
                   </tr>
@@ -593,14 +674,18 @@ export default function CategoryPage({
                         >
                           {p.name.replace('CRI ', '')}
                         </button>
+                        {p.stages && (
+                          <span className="ml-1.5 text-[10px] font-bold px-1.5 py-0.2 rounded bg-sky-50 text-sky-800 border border-sky-200 whitespace-nowrap">
+                            {p.stages} ST
+                          </span>
+                        )}
                       </td>
-                      <td className="py-2.5 px-2.5 text-gray-700 whitespace-nowrap">{p.hp || '-'}</td>
-                      <td className="py-2.5 px-2.5 text-gray-600 whitespace-nowrap">{p.stages || '-'}</td>
+                      <td className="py-2.5 px-2.5 text-gray-700 whitespace-nowrap font-medium">{p.hp || '-'}</td>
                       <td className="py-2.5 px-2.5 text-gray-600 whitespace-nowrap">{p.pipeSize || '-'}</td>
                       <td className="py-2.5 px-2.5 text-gray-600 whitespace-nowrap">{p.phase || '-'}</td>
                       <td className="py-2.5 px-2.5 text-gray-600 whitespace-nowrap">{p.head || '-'}</td>
                       <td className="py-2.5 px-2.5 text-gray-600 whitespace-nowrap">{p.discharge || '-'}</td>
-                      <td className="py-2.5 px-3 text-right font-bold text-gray-950 text-xs sm:text-sm whitespace-nowrap">
+                      <td className="py-2.5 px-3 text-right font-extrabold text-blue-900 text-xs sm:text-sm whitespace-nowrap">
                         ₹{p.price.toLocaleString('en-IN')}
                       </td>
                       <td className="py-2.5 px-3 text-center whitespace-nowrap">
@@ -619,7 +704,13 @@ export default function CategoryPage({
           </div>
         ) : (
           /* Cards Grid View */
-          <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4 mb-6">
+          <div
+            className={`grid gap-3 sm:gap-4 md:gap-5 mb-6 ${
+              activeCategory === 'tiny'
+                ? 'grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4'
+                : 'grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-6'
+            }`}
+          >
             {paginated.map(p => (
               <ProductCard
                 key={p.id}

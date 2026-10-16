@@ -37,26 +37,48 @@ export default function App() {
       if (!rawHash || rawHash === 'home') {
         setPage('home');
         document.title = 'Hebron Enterprises — Authorised C.R.I. Pumps Dealer';
-      } else if (rawHash.startsWith('category')) {
+      } else if (rawHash.startsWith('category') || rawHash.startsWith('categories')) {
         const parts = rawHash.split('?');
         const pathPart = parts[0];
         const searchPart = parts[1] || '';
-        const catSegment = pathPart.replace(/^category\/?/, '').trim();
-        const validCat = catSegment === 'all' ? 'all' : catSegment === 'agri-pumps' ? 'agri' : catSegment === 'home-pumps' ? 'residential' : catSegment || 'agri';
+        
+        const cleanPath = pathPart.replace(/^(category|categories)\/?/, '').trim();
+        const segments = cleanPath.split('/').filter(Boolean);
+        const rawCat = segments[0] || 'agri';
+        const validCat = rawCat === 'all' ? 'all' : rawCat === 'agri-pumps' ? 'agri' : rawCat === 'home-pumps' ? 'residential' : rawCat;
         
         const params = new URLSearchParams(searchPart);
-        const sub = params.get('sub') ? decodeURIComponent(params.get('sub')!) : 'All';
+        let sub = 'All';
+        
+        if (params.get('sub')) {
+          sub = decodeURIComponent(params.get('sub')!);
+        } else if (segments.length > 1) {
+          const rawSubSlug = decodeURIComponent(segments[1]).toLowerCase().replace(/[^a-z0-9]/g, '');
+          const catObj = categories.find(c => c.id === validCat);
+          const matchedSub = catObj?.subcategories.find(s => 
+            s.toLowerCase().replace(/[^a-z0-9]/g, '') === rawSubSlug
+          );
+          if (matchedSub) {
+            sub = matchedSub;
+          }
+        }
         
         setSelectedCategory(validCat);
         setSelectedSubcategory(sub);
         setPage('category');
 
         const catObj = categories.find(c => c.id === validCat);
-        document.title = validCat === 'all'
-          ? 'All C.R.I. Pumps & Products | Hebron Enterprises'
-          : catObj 
-          ? `C.R.I. ${catObj.name} Pumps & Systems | Official Rate Contract | Hebron Enterprises`
-          : 'C.R.I. Pumps Department | Hebron Enterprises';
+        if (validCat === 'tiny') {
+          document.title = sub !== 'All'
+            ? `${sub} — C.R.I. Tiny Pump Models & RCP Rates | Hebron Enterprises`
+            : 'C.R.I. Tiny Product Categories & Pumps | Official RCP Catalogue | Hebron Enterprises';
+        } else {
+          document.title = validCat === 'all'
+            ? 'All C.R.I. Pumps & Products | Hebron Enterprises'
+            : catObj 
+            ? `C.R.I. ${catObj.name} Pumps & Systems | Official Rate Contract | Hebron Enterprises`
+            : 'C.R.I. Pumps Department | Hebron Enterprises';
+        }
       } else if (rawHash.startsWith('search')) {
         const params = new URLSearchParams(rawHash.split('?')[1] || '');
         const q = params.get('q') || '';

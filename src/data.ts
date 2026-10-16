@@ -1,4 +1,5 @@
 import agriCatalogueRaw from './data/agriCatalogue.json';
+import { tinyCatalogueProducts } from './data/tinyCatalogue';
 
 export interface Product {
   id: string;
@@ -85,7 +86,22 @@ export const categories: Category[] = [
     icon: '⚡',
     image: 'https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=1200&h=600&fit=crop&auto=format',
     description: 'C.R.I. Tiny series pumps are ultra-compact mini powerhouses engineered for tight spaces, household overhead tanks, gardens, and light utility.',
-    subcategories: ['Tiny King Series', 'Tiny Master Series', 'Tiny Smart 0.5 HP', 'Compact Monoblock', 'Portable Utility Pumps'],
+    subcategories: [
+      'PLANO',
+      'PLANO I-SMART',
+      'CSS',
+      'Vertical Open Well Submersible Pumps',
+      'Vertical/Horizontal Open Well Submersible Pumps',
+      'SELFY – High Speed',
+      'SELFY MAX – Slow Speed',
+      'Engine Pumpset',
+      'Mini Pumps 1HP',
+      'Mini Pumps 0.5HP',
+      'I-SMART Pumps',
+      'ClaRO',
+      'CJS Series',
+      'PREZJET – Car Washer Pumps',
+    ],
     bgColor: '#FEFCE8',
   },
   {
@@ -108,7 +124,7 @@ export const categories: Category[] = [
   },
 ];
 
-// Preserved products for Residential, Tiny, Next Gen, and Accessories
+// Preserved products for Residential, Next Gen, and Accessories (All dummy Tiny records removed)
 const otherProducts: Product[] = [
   // Residential Pumps
   {
@@ -175,61 +191,6 @@ const otherProducts: Product[] = [
     reviews: 87,
     image: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=400&h=400&fit=crop&auto=format',
     specs: ['1 HP 230V', 'High Suction', 'Copper Winding', 'BEE 5-Star'],
-    inStock: true,
-  },
-
-  // Tiny Pumps
-  {
-    id: 'p028',
-    name: 'CRI Tiny King 0.5 HP Self-Priming Mini Pump',
-    category: 'tiny',
-    subcategory: 'Tiny King Series',
-    price: 2850,
-    originalPrice: 3400,
-    rating: 4.8,
-    reviews: 210,
-    image: 'https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=400&h=400&fit=crop&auto=format',
-    specs: ['0.5 HP Motor', 'Pocket-Size Footprint', '100% Copper Winding', 'TOP Thermal Protector'],
-    badge: 'Best Seller',
-    inStock: true,
-  },
-  {
-    id: 'p029',
-    name: 'CRI Tiny Master 0.25 HP Mini Monoblock',
-    category: 'tiny',
-    subcategory: 'Tiny Master Series',
-    price: 2350,
-    originalPrice: 2800,
-    rating: 4.7,
-    reviews: 184,
-    image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&h=400&fit=crop&auto=format',
-    specs: ['0.25 HP Motor', 'Ultra Compact', 'Forged Brass Impeller', 'Low Power 180W'],
-    inStock: true,
-  },
-  {
-    id: 'p030',
-    name: 'CRI Tiny Smart 0.5 HP High-Head Pump',
-    category: 'tiny',
-    subcategory: 'Tiny Smart 0.5 HP',
-    price: 3100,
-    originalPrice: 3600,
-    rating: 4.6,
-    reviews: 98,
-    image: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&h=400&fit=crop&auto=format',
-    specs: ['25m Max Head', 'Anti-Rust Coating', 'Self-Priming up to 7m', 'Silent Operation'],
-    badge: 'Popular',
-    inStock: true,
-  },
-  {
-    id: 'p031',
-    name: 'CRI Tiny Flow Portable Utility Pump',
-    category: 'tiny',
-    subcategory: 'Portable Utility Pumps',
-    price: 2600,
-    rating: 4.5,
-    reviews: 65,
-    image: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=400&h=400&fit=crop&auto=format',
-    specs: ['Lightweight & Portable', 'Plug & Play 230V', 'High Suction', 'Rust-Proof'],
     inStock: true,
   },
 
@@ -366,16 +327,171 @@ const otherProducts: Product[] = [
   },
 ];
 
-// All verified Agri products from PDF price list (369 items) + other category items
+// All verified Agri and Tiny products from official Rate Contract Price List (Tamil Nadu) + other category items
 export const products: Product[] = [
   ...(agriCatalogueRaw as unknown as Product[]),
+  ...tinyCatalogueProducts,
   ...otherProducts,
 ];
 
-// Featured products showcasing bestsellers from Agri and other categories
+// Featured products showcasing bestsellers from Agri, Tiny, and other categories
 export const featuredProducts = products.filter(p =>
-  ['cri-632635', 'p002', 'cri-627163', 'p028', 'cri-641525', 'p032', 'cri-671403', 'p005'].includes(p.id)
+  ['cri-632635', 'p002', 'cri-627163', 'cri-636388', 'cri-641525', 'p032', 'cri-671403', 'cri-675781', 'p005'].includes(p.id)
 );
+
+export interface TinySubcategoryInfo {
+  name: string;
+  tag: string;
+  description: string;
+  icon: string;
+  hpRange: string;
+  pipeRange: string;
+  application: string;
+  image: string;
+}
+
+export const tinySubcategoriesMeta: Record<string, TinySubcategoryInfo> = {
+  'PLANO': {
+    name: 'PLANO',
+    tag: 'Open Well Submersible (Up to 2 HP)',
+    description: 'Stainless steel open well submersible pumpsets. Energy efficient, panel box not required for Ultra series.',
+    icon: '💧',
+    hpRange: '0.5 HP – 2.0 HP',
+    pipeRange: '25 × 25 to 50 × 50 mm',
+    application: 'Sump, Tank & Open Well Domestic Water Supply',
+    image: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=600&h=400&fit=crop&auto=format',
+  },
+  'PLANO I-SMART': {
+    name: 'PLANO I-SMART',
+    tag: 'Smart Open Well Submersibles',
+    description: 'Smart-enabled stainless steel openwell pumps with integrated sensor logic and high-flow discharge.',
+    icon: '⚡',
+    hpRange: '0.5 HP – 1.0 HP',
+    pipeRange: '25 × 25 mm',
+    application: 'Smart Homes, Residential Underground Sumps',
+    image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600&h=400&fit=crop&auto=format',
+  },
+  'CSS': {
+    name: 'CSS',
+    tag: 'Open Well Submersible (Up to 2 HP)',
+    description: 'Rugged mild steel & stainless steel openwell submersibles engineered for high head and high volume lifting.',
+    icon: '🌀',
+    hpRange: '1.0 HP – 2.0 HP',
+    pipeRange: '25 to 50 mm',
+    application: 'Farm sumps, Wells, Residential Apartments',
+    image: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=600&h=400&fit=crop&auto=format',
+  },
+  'Vertical Open Well Submersible Pumps': {
+    name: 'Vertical Open Well Submersible Pumps',
+    tag: 'Vertical Multistage (Up to 2 HP)',
+    description: 'Space-saving vertical openwell submersible pumpsets including dry-type CVS and multistage LTK series up to 11 stages.',
+    icon: '🏗️',
+    hpRange: '1.0 HP – 1.5 HP',
+    pipeRange: '25 to 32 mm',
+    application: 'Narrow sumps, High-head water distribution',
+    image: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=600&h=400&fit=crop&auto=format',
+  },
+  'Vertical/Horizontal Open Well Submersible Pumps': {
+    name: 'Vertical/Horizontal Open Well Submersible Pumps',
+    tag: 'Dual-Mount Open Well Submersible',
+    description: 'Versatile PLANO VH series adaptable for either vertical or horizontal immersion according to pit dimensions.',
+    icon: '🔄',
+    hpRange: '0.5 HP – 1.5 HP',
+    pipeRange: '32 mm',
+    application: 'Low-water sumps, Flexible pit installations',
+    image: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=600&h=400&fit=crop&auto=format',
+  },
+  'SELFY – High Speed': {
+    name: 'SELFY – High Speed',
+    tag: 'High Speed Self-Priming Monoblock',
+    description: 'High-speed quick self-priming monoblocks available in aluminium and cast iron bodies for instantaneous priming.',
+    icon: '⚡',
+    hpRange: '0.5 HP – 1.5 HP',
+    pipeRange: '25 × 25 mm',
+    application: 'Rapid suction from municipal lines & sumps',
+    image: 'https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=600&h=400&fit=crop&auto=format',
+  },
+  'SELFY MAX – Slow Speed': {
+    name: 'SELFY MAX – Slow Speed',
+    tag: 'Slow Speed Heavy Duty Self-Priming',
+    description: 'Slow-speed cast-iron self-priming pumps with low vibration, reduced wear, long lifespan, and steady high head.',
+    icon: '🛡️',
+    hpRange: '0.5 HP – 1.0 HP',
+    pipeRange: '25 × 25 mm',
+    application: 'Continuous residential duty, Low-noise installations',
+    image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=600&h=400&fit=crop&auto=format',
+  },
+  'Engine Pumpset': {
+    name: 'Engine Pumpset',
+    tag: 'Petrol Driven Portable Pumpset',
+    description: 'Powerful 7 HP 4-stroke petrol-driven portable pumpsets delivering up to 60,000 LPH without electric power supply.',
+    icon: '⛽',
+    hpRange: '7.0 HP',
+    pipeRange: '50 × 50 to 80 × 80 mm',
+    application: 'Construction dewatering, Remote agricultural fields',
+    image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600&h=400&fit=crop&auto=format',
+  },
+  'Mini Pumps 1HP': {
+    name: 'Mini Pumps 1HP',
+    tag: '1 HP Regenerative Domestic Monoblock',
+    description: '100% copper-wound 1 HP mini monoblocks (GLAD, ELSA, MIKI, SHINE, ROYALE, STEELIX) for multi-storey overhead tanks.',
+    icon: '🏠',
+    hpRange: '1.0 HP',
+    pipeRange: '25 × 25 mm',
+    application: 'Multi-storey buildings, High-suction water transfer',
+    image: 'https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=600&h=400&fit=crop&auto=format',
+  },
+  'Mini Pumps 0.5HP': {
+    name: 'Mini Pumps 0.5HP',
+    tag: '0.5 HP Compact Household Monoblock',
+    description: 'Whisper-quiet, low power consumption 0.5 HP mini domestic pumps designed for independent homes and gardens.',
+    icon: '🏡',
+    hpRange: '0.5 HP',
+    pipeRange: '15 × 15 to 25 × 25 mm',
+    application: 'Independent houses, Overhead tanks, Domestic gardens',
+    image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=600&h=400&fit=crop&auto=format',
+  },
+  'I-SMART Pumps': {
+    name: 'I-SMART Pumps',
+    tag: 'Intelligent Monoblock Pumpsets',
+    description: 'Advanced self-priming smart pumps with thermal overload protector and voltage stabilizer tolerance.',
+    icon: '💡',
+    hpRange: '0.5 HP – 1.0 HP',
+    pipeRange: '25 × 25 mm',
+    application: 'Modern residences, Automated overhead tank filling',
+    image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600&h=400&fit=crop&auto=format',
+  },
+  'ClaRO': {
+    name: 'ClaRO',
+    tag: 'Ultra High-Head Peripheral Pump',
+    description: 'Peripheral high-pressure pumps generating massive head up to 90 meters with minimum energy consumption.',
+    icon: '🎯',
+    hpRange: '0.5 HP – 1.0 HP',
+    pipeRange: '15 × 15 mm',
+    application: 'High-rise residential pressure, Long-distance line boost',
+    image: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=600&h=400&fit=crop&auto=format',
+  },
+  'CJS Series': {
+    name: 'CJS Series',
+    tag: 'Centrifugal Jet & Shallow Well Pumps',
+    description: 'High-lift shallow well pumps and CJS jet pumpsets (SHALO series) engineered for deep suction lift up to 39 meters.',
+    icon: '🌊',
+    hpRange: '0.5 HP – 1.5 HP',
+    pipeRange: '25 × 25 mm',
+    application: 'Shallow borewells, Underground sumps with high lift',
+    image: 'https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=600&h=400&fit=crop&auto=format',
+  },
+  'PREZJET – Car Washer Pumps': {
+    name: 'PREZJET – Car Washer Pumps',
+    tag: 'High Pressure Vehicle Washer Systems',
+    description: 'Heavy duty pressure washer pumpsets (60 to 140 BAR) with trolley and hose accessories for commercial vehicle washing.',
+    icon: '🚿',
+    hpRange: '1.0 HP – 2.0 HP',
+    pipeRange: '15 × 15 mm',
+    application: 'Automotive service centers, Commercial washing',
+    image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600&h=400&fit=crop&auto=format',
+  },
+};
 
 export const testimonials: Testimonial[] = [
   {
