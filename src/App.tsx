@@ -72,6 +72,10 @@ export default function App() {
           document.title = sub !== 'All'
             ? `${sub} — C.R.I. Tiny Pump Models & RCP Rates | Hebron Enterprises`
             : 'C.R.I. Tiny Product Categories & Pumps | Official RCP Catalogue | Hebron Enterprises';
+        } else if (validCat === 'next-gen') {
+          document.title = sub !== 'All'
+            ? `${sub} — C.R.I. NEXT GEN Models & Price List | Hebron Enterprises`
+            : 'C.R.I. NEXT GEN Product Categories & Models | Official Price Catalogue | Hebron Enterprises';
         } else {
           document.title = validCat === 'all'
             ? 'All C.R.I. Pumps & Products | Hebron Enterprises'

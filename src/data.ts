@@ -1,5 +1,6 @@
 import agriCatalogueRaw from './data/agriCatalogue.json';
 import { tinyCatalogueProducts } from './data/tinyCatalogue';
+import { nextGenCatalogueProducts } from './data/nextGenCatalogue';
 
 export interface Product {
   id: string;
@@ -23,6 +24,15 @@ export interface Product {
   head?: string;
   discharge?: string;
   page?: number;
+  model?: string;
+  group?: string;
+  stageTank?: string;
+  maxPressure?: string;
+  flowRate?: string;
+  solidHandling?: string;
+  powerWatts?: string | number;
+  inletOutletSize?: string;
+  cableLength?: string;
 }
 
 export interface Category {
@@ -109,8 +119,34 @@ export const categories: Category[] = [
     name: 'Next Gen',
     icon: '🚀',
     image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&h=600&fit=crop&auto=format',
-    description: 'Next-Gen intelligent smart pumping solutions featuring IoT smartphone monitoring, BLDC motors, variable frequency inverters, and automatic sensor control.',
-    subcategories: ['Smart IoT Pumps', 'BLDC Inverter Pumps', 'Smart Digital Boosters', 'Solar Variable Inverters', 'Smart Telemetry Units'],
+    description: 'C.R.I. NEXT GEN series features advanced stainless steel monoblock special application pumps, hydro-pneumatic & smart inverter boosters, and heavy-duty sewage & drainage pumpsets.',
+    subcategories: [
+      // A. JTS / CTSS Series
+      'SS Monoblock Pumpsets Special Application – JTS',
+      'SS Monoblock Pumpsets Special Application – CTSS',
+
+      // B. Booster Pumps
+      'Mini Booster Pumps – TINY FORCE',
+      'Booster Pumps – BRISK',
+      'Booster Pumps – MHBS',
+      'Booster Pumps – I PREZ',
+      'Booster Pumps – I PREZ (Encloser Type)',
+      'Booster Pumps – MHS (Multistage Horizontal Pumps)',
+      'Automatic Pump Controller',
+      'Mini Circulatory Pumps',
+      'Float Switch',
+
+      // C. Submersible and Surface Sewage / Drainage Pumps
+      'Surface Sewage / Drainage Monoblock Pumpsets',
+      'Mini Plastic Drainage Submersible Pumpsets',
+      'Mini SS Sewage & Drainage Pumpsets',
+      'Submersible Drainage Pumpsets',
+      'Submersible Drainage / Sewage Pumpsets',
+      'Submersible Sewage Pumpsets',
+      'Submersible Sewage Cutter Pumpsets',
+      'Submersible & Central Delivery Sewage/Drainage Pumpsets',
+      'Submersible Heavy Sewage Pumps',
+    ],
     bgColor: '#F5F3FF',
   },
   {
@@ -194,59 +230,7 @@ const otherProducts: Product[] = [
     inStock: true,
   },
 
-  // Next Gen Pumps
-  {
-    id: 'p032',
-    name: 'CRI NextGen Smart BLDC Booster Pump 1HP',
-    category: 'next-gen',
-    subcategory: 'BLDC Inverter Pumps',
-    price: 14500,
-    originalPrice: 17500,
-    rating: 4.9,
-    reviews: 76,
-    image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400&h=400&fit=crop&auto=format',
-    specs: ['BLDC Permanent Magnet Motor', 'Constant Water Pressure', 'Mobile App Enabled', 'Super Silent 45dB'],
-    badge: 'NextGen Tech',
-    inStock: true,
-  },
-  {
-    id: 'p033',
-    name: 'CRI NextGen IoT Smart Submersible Controller Kit',
-    category: 'next-gen',
-    subcategory: 'Smart IoT Pumps',
-    price: 21900,
-    originalPrice: 24900,
-    rating: 4.9,
-    reviews: 52,
-    image: 'https://images.unsplash.com/photo-1509391365360-2e959784a276?w=400&h=400&fit=crop&auto=format',
-    specs: ['WiFi & 4G IoT Telemetry', 'Remote Smartphone Control', 'Dry Run & Voltage Protection', 'Live Water Flow Data'],
-    badge: 'Smart Pick',
-    inStock: true,
-  },
-  {
-    id: 'p034',
-    name: 'CRI NextGen Variable Speed Inverter Pump 1.5HP',
-    category: 'next-gen',
-    subcategory: 'BLDC Inverter Pumps',
-    price: 18200,
-    rating: 4.8,
-    reviews: 39,
-    image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400&h=400&fit=crop&auto=format',
-    specs: ['Intelligent VFD Inverter', 'Saves Up to 60% Energy', 'Soft Start/Stop', 'Integrated LCD Touchscreen'],
-    inStock: true,
-  },
-  {
-    id: 'p035',
-    name: 'CRI NextGen Auto Smart Digital Booster',
-    category: 'next-gen',
-    subcategory: 'Smart Digital Boosters',
-    price: 11800,
-    rating: 4.7,
-    reviews: 43,
-    image: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=400&h=400&fit=crop&auto=format',
-    specs: ['Intelligent Flow Sensor', 'Auto Fault Diagnosis', 'Leakage Detection', 'Compact Wall Mount'],
-    inStock: true,
-  },
+  // All dummy Next Gen records removed (replaced by genuine verified nextGenCatalogue models)
 
   // Accessories
   {
@@ -327,16 +311,17 @@ const otherProducts: Product[] = [
   },
 ];
 
-// All verified Agri and Tiny products from official Rate Contract Price List (Tamil Nadu) + other category items
+// All verified Agri, Tiny, and Next Gen products from official Rate Contract Price List (Tamil Nadu) + other category items
 export const products: Product[] = [
   ...(agriCatalogueRaw as unknown as Product[]),
   ...tinyCatalogueProducts,
+  ...nextGenCatalogueProducts,
   ...otherProducts,
 ];
 
-// Featured products showcasing bestsellers from Agri, Tiny, and other categories
+// Featured products showcasing bestsellers from Agri, Tiny, Next Gen, and other categories
 export const featuredProducts = products.filter(p =>
-  ['cri-632635', 'p002', 'cri-627163', 'cri-636388', 'cri-641525', 'p032', 'cri-671403', 'cri-675781', 'p005'].includes(p.id)
+  ['cri-632635', 'p002', 'cri-627163', 'cri-636388', 'cri-641525', 'cri-630093', 'cri-634651', 'cri-671403', 'cri-675781', 'p005'].includes(p.id)
 );
 
 export interface TinySubcategoryInfo {
@@ -565,3 +550,244 @@ export const offers = [
     expires: 'Valid till 31 Oct 2026',
   },
 ];
+
+export interface NextGenSubcategoryInfo {
+  name: string;
+  group: 'JTS / CTSS Series' | 'Booster Pumps' | 'Submersible and Surface Sewage / Drainage Pumps';
+  tag: string;
+  description: string;
+  icon: string;
+  hpRange: string;
+  pipeRange: string;
+  application: string;
+  image: string;
+}
+
+export const nextGenSubcategoriesMeta: Record<string, NextGenSubcategoryInfo> = {
+  // A. JTS / CTSS Series
+  'SS Monoblock Pumpsets Special Application – JTS': {
+    name: 'SS Monoblock Pumpsets Special Application – JTS',
+    group: 'JTS / CTSS Series',
+    tag: 'SS Monoblock Special Application',
+    description: 'All-stainless-steel monoblock pumpsets engineered for corrosive fluids, hygienic transfer, and industrial chemical duty.',
+    icon: '🛡️',
+    hpRange: '0.5 HP – 1.5 HP',
+    pipeRange: '25 × 25 mm',
+    application: 'Special Industrial, RO & Chemical Transfer',
+    image: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=600&h=400&fit=crop&auto=format',
+  },
+  'SS Monoblock Pumpsets Special Application – CTSS': {
+    name: 'SS Monoblock Pumpsets Special Application – CTSS',
+    group: 'JTS / CTSS Series',
+    tag: 'High Flow SS Monoblock',
+    description: 'Heavy-duty stainless steel monoblock pumps delivering high flow rates up to 12,000 LPH and pressure up to 30 bar.',
+    icon: '⚙️',
+    hpRange: '0.5 HP – 2.0 HP',
+    pipeRange: '32 × 25 mm',
+    application: 'Commercial RO Systems, Dairy & Food Processing',
+    image: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=600&h=400&fit=crop&auto=format',
+  },
+
+  // B. Booster Pumps
+  'Mini Booster Pumps – TINY FORCE': {
+    name: 'Mini Booster Pumps – TINY FORCE',
+    group: 'Booster Pumps',
+    tag: 'Automatic Compact Booster',
+    description: 'Compact household pressure boosting pumps with automatic flow sensing for constant pressure across showers and taps.',
+    icon: '⚡',
+    hpRange: '0.5 HP – 1.0 HP',
+    pipeRange: '25 × 25 mm',
+    application: 'Villas, Multi-Bathrooms, Solar Water Heaters',
+    image: 'https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=600&h=400&fit=crop&auto=format',
+  },
+  'Booster Pumps – BRISK': {
+    name: 'Booster Pumps – BRISK',
+    group: 'Booster Pumps',
+    tag: 'Hydro-Pneumatic System (24L)',
+    description: 'Pre-assembled booster pumpsets with 24 Ltr pressure tank providing ripple-free water pressure for modern homes.',
+    icon: '🚀',
+    hpRange: '0.5 HP – 1.5 HP',
+    pipeRange: '25 × 25 mm',
+    application: 'Residential Buildings, High Pressure Showers',
+    image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=600&h=400&fit=crop&auto=format',
+  },
+  'Booster Pumps – MHBS': {
+    name: 'Booster Pumps – MHBS',
+    group: 'Booster Pumps',
+    tag: 'Multistage Horizontal Booster',
+    description: 'High-pressure horizontal multistage pumps coupled with 24L or 35L pressure tanks for multi-storey residential water demand.',
+    icon: '🏗️',
+    hpRange: '0.5 HP – 1.5 HP',
+    pipeRange: '25 × 25 mm',
+    application: 'Hotels, Apartments, Commercial Complexes',
+    image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=600&h=400&fit=crop&auto=format',
+  },
+  'Booster Pumps – I PREZ': {
+    name: 'Booster Pumps – I PREZ',
+    group: 'Booster Pumps',
+    tag: 'Smart Variable Inverter Booster',
+    description: 'Intelligent frequency-driven booster pumps delivering whisper-quiet operation and constant water pressure on demand.',
+    icon: '💡',
+    hpRange: '1.0 HP – 3.0 HP',
+    pipeRange: '25 × 25 to 40 × 40 mm',
+    application: 'Luxury Residences, Modern Bungalows, Hospitals',
+    image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600&h=400&fit=crop&auto=format',
+  },
+  'Booster Pumps – I PREZ (Encloser Type)': {
+    name: 'Booster Pumps – I PREZ (Encloser Type)',
+    group: 'Booster Pumps',
+    tag: 'Soundproof Enclosed Booster',
+    description: 'Acoustically insulated enclosed smart booster systems engineered for ultra-quiet indoor or terrace installation.',
+    icon: '🔇',
+    hpRange: '0.67 HP – 1.0 HP',
+    pipeRange: '25 × 25 mm',
+    application: 'Whisper-Quiet Residential Installations, Penthouses',
+    image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600&h=400&fit=crop&auto=format',
+  },
+  'Booster Pumps – MHS (Multistage Horizontal Pumps)': {
+    name: 'Booster Pumps – MHS (Multistage Horizontal Pumps)',
+    group: 'Booster Pumps',
+    tag: 'Multistage Horizontal Monoblock',
+    description: 'Horizontal multistage centrifugal pumps with stainless steel impellers for boiler feeds, RO filtration, and boosting.',
+    icon: '🔄',
+    hpRange: '0.6 HP – 1.0 HP',
+    pipeRange: '25 × 25 to 32 × 25 mm',
+    application: 'Industrial RO, Boiler Feed, Commercial Washing',
+    image: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=600&h=400&fit=crop&auto=format',
+  },
+  'Automatic Pump Controller': {
+    name: 'Automatic Pump Controller',
+    group: 'Booster Pumps',
+    tag: 'Electronic Pressure Switch & Controller',
+    description: 'Intelligent electronic pump controller preventing dry running and automating start/stop based on water tap usage.',
+    icon: '🎛️',
+    hpRange: 'Universal (up to 1.5 HP)',
+    pipeRange: '1" NPT / Universal',
+    application: 'Automating Overhead & Sump Monoblocks',
+    image: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=600&h=400&fit=crop&auto=format',
+  },
+  'Mini Circulatory Pumps': {
+    name: 'Mini Circulatory Pumps',
+    group: 'Booster Pumps',
+    tag: 'Hot Water Circulation',
+    description: 'Ultra-quiet 3-speed glandless circulation pumps designed for solar water heater loops and domestic heating.',
+    icon: '🔥',
+    hpRange: '150W – 275W',
+    pipeRange: '15 to 25 mm',
+    application: 'Solar Water Heaters, Hydronic Heating',
+    image: 'https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=600&h=400&fit=crop&auto=format',
+  },
+  'Float Switch': {
+    name: 'Float Switch',
+    group: 'Booster Pumps',
+    tag: 'Tank Level Automation',
+    description: 'Double chamber microswitch float sensors for dual filling and emptying automation with counterweight.',
+    icon: '🎚️',
+    hpRange: 'Universal Sensor',
+    pipeRange: '2m, 3m, 5m Cable',
+    application: 'Sump & Overhead Tank Automation',
+    image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=600&h=400&fit=crop&auto=format',
+  },
+
+  // C. Submersible and Surface Sewage / Drainage Pumps
+  'Surface Sewage / Drainage Monoblock Pumpsets': {
+    name: 'Surface Sewage / Drainage Monoblock Pumpsets',
+    group: 'Submersible and Surface Sewage / Drainage Pumps',
+    tag: 'Surface Sewage Self-Priming',
+    description: 'Non-clog surface monoblocks handling up to 15.5mm solids and flow up to 63,000 LPH for drainage and waste.',
+    icon: '🚜',
+    hpRange: '0.5 HP – 5.0 HP',
+    pipeRange: '40 × 40 to 80 × 80 mm',
+    application: 'STP Plants, Factory Effluents, Sewage Transfer',
+    image: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=600&h=400&fit=crop&auto=format',
+  },
+  'Mini Plastic Drainage Submersible Pumpsets': {
+    name: 'Mini Plastic Drainage Submersible Pumpsets',
+    group: 'Submersible and Surface Sewage / Drainage Pumps',
+    tag: 'Corrosion-Free Plastic Submersible',
+    description: 'Lightweight corrosion-proof submersible sump pumps with integrated float switches for basement dewatering.',
+    icon: '🪣',
+    hpRange: '0.5 HP – 1.0 HP',
+    pipeRange: '40 mm',
+    application: 'Basement Dewatering, Garden Drainage, Pit Emptying',
+    image: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=600&h=400&fit=crop&auto=format',
+  },
+  'Mini SS Sewage & Drainage Pumpsets': {
+    name: 'Mini SS Sewage & Drainage Pumpsets',
+    group: 'Submersible and Surface Sewage / Drainage Pumps',
+    tag: 'Stainless Steel Sewage Submersible',
+    description: 'Grade 304 stainless steel submersible drainage pumps handling up to 25mm solids with auto float operation.',
+    icon: '✨',
+    hpRange: '0.75 HP – 1.0 HP',
+    pipeRange: '32 to 40 mm',
+    application: 'Kitchen Waste, Sump Pit Dewatering, Grey Water',
+    image: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=600&h=400&fit=crop&auto=format',
+  },
+  'Submersible Drainage Pumpsets': {
+    name: 'Submersible Drainage Pumpsets',
+    group: 'Submersible and Surface Sewage / Drainage Pumps',
+    tag: 'Heavy Cast Iron Drainage',
+    description: 'Rugged submersible drainage pumpsets featuring semi-open impellers for storm water and basement flooding.',
+    icon: '🌊',
+    hpRange: '0.5 HP – 2.0 HP',
+    pipeRange: '40 to 80 mm',
+    application: 'Stormwater Dewatering, Construction Pits',
+    image: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=600&h=400&fit=crop&auto=format',
+  },
+  'Submersible Drainage / Sewage Pumpsets': {
+    name: 'Submersible Drainage / Sewage Pumpsets',
+    group: 'Submersible and Surface Sewage / Drainage Pumps',
+    tag: 'Vortex Impeller Sewage Pumps',
+    description: 'Submersible pumpsets with vortex impellers (CDL/CDRF series) passing solid-laden fluids without clogging.',
+    icon: '🌀',
+    hpRange: '0.5 HP – 1.0 HP',
+    pipeRange: '50 to 80 mm',
+    application: 'Domestic Sewage, Hotel Kitchen Drain, Septic Tanks',
+    image: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=600&h=400&fit=crop&auto=format',
+  },
+  'Submersible Sewage Pumpsets': {
+    name: 'Submersible Sewage Pumpsets',
+    group: 'Submersible and Surface Sewage / Drainage Pumps',
+    tag: 'Heavy Duty Non-Clog Sewage',
+    description: 'High-performance submersible sewage pumps handling solids up to 35mm and discharge up to 42,000 LPH.',
+    icon: '🏭',
+    hpRange: '1.0 HP – 3.0 HP',
+    pipeRange: '40 to 65 mm',
+    application: 'Municipal Sewage, Apartments, Industrial Effluents',
+    image: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=500&h=500&fit=crop&auto=format',
+  },
+  'Submersible Sewage Cutter Pumpsets': {
+    name: 'Submersible Sewage Cutter Pumpsets',
+    group: 'Submersible and Surface Sewage / Drainage Pumps',
+    tag: 'Tungsten Carbide Cutter Submersible',
+    description: 'High-torque grinder pumps with tungsten carbide shredder cutters reducing fibrous waste, cloth, and plastics.',
+    icon: '✂️',
+    hpRange: '1.0 HP – 10.0 HP',
+    pipeRange: '50 to 100 mm',
+    application: 'Hospital Waste, Commercial Kitchens, Heavy Sewage',
+    image: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=500&h=500&fit=crop&auto=format',
+  },
+  'Submersible & Central Delivery Sewage/Drainage Pumpsets': {
+    name: 'Submersible & Central Delivery Sewage/Drainage Pumpsets',
+    group: 'Submersible and Surface Sewage / Drainage Pumps',
+    tag: 'Central Top Discharge Submersible',
+    description: 'Massive central-delivery pumpsets up to 35 HP delivering up to 3,90,000 LPH for large-scale sewage lifting.',
+    icon: '🏛️',
+    hpRange: '1.0 HP – 35.0 HP',
+    pipeRange: '40 to 150 mm',
+    application: 'Municipal Sewage Treatment Plants, Flood Control',
+    image: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=500&h=500&fit=crop&auto=format',
+  },
+  'Submersible Heavy Sewage Pumps': {
+    name: 'Submersible Heavy Sewage Pumps',
+    group: 'Submersible and Surface Sewage / Drainage Pumps',
+    tag: 'Heavy Industrial Sewage',
+    description: 'Extra heavy-duty submersible sewage pumps handling up to 30mm solids and 15 HP high head up to 52.5 meters.',
+    icon: '🏗️',
+    hpRange: '2.0 HP – 15.0 HP',
+    pipeRange: '50 to 100 mm',
+    application: 'Industrial Processing, Chemical Effluent, Mine Drainage',
+    image: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=500&h=500&fit=crop&auto=format',
+  },
+};
+

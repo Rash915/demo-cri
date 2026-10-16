@@ -105,34 +105,44 @@ export default function ProductCard({
         </h3>
 
         {/* Technical Specification Matrix for Pumps */}
-        {isTiny || product.hp ? (
+        {isTiny || product.hp || product.powerWatts || product.cableLength ? (
           <div className="bg-slate-50/90 rounded-xl p-2 sm:p-2.5 mb-2.5 sm:mb-3 border border-slate-200/70 text-[10px] sm:text-[11px] flex flex-col gap-1 sm:gap-1.5">
             <div className="grid grid-cols-2 gap-x-2 gap-y-1">
               <div className="flex items-center justify-between">
                 <span className="text-gray-500 font-medium">Power:</span>
-                <span className="font-bold text-gray-900 truncate ml-1">{product.hp || '-'}</span>
+                <span className="font-bold text-gray-900 truncate ml-1">
+                  {product.stageTank || product.powerWatts || product.hp || '-'}
+                </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-gray-500 font-medium">Pipe:</span>
-                <span className="font-semibold text-gray-900 truncate ml-1">{product.pipeSize ? `${product.pipeSize} mm` : '-'}</span>
+                <span className="text-gray-500 font-medium">{product.inletOutletSize ? 'In/Out:' : 'Pipe:'}</span>
+                <span className="font-semibold text-gray-900 truncate ml-1">
+                  {product.inletOutletSize || (product.pipeSize ? `${product.pipeSize} mm` : '-')}
+                </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-gray-500 font-medium">Head:</span>
-                <span className="font-semibold text-gray-800 truncate ml-1">{product.head || '-'}</span>
+                <span className="text-gray-500 font-medium">
+                  {product.maxPressure ? 'Pressure:' : product.cableLength ? 'Cable:' : 'Head:'}
+                </span>
+                <span className="font-semibold text-gray-800 truncate ml-1">
+                  {product.maxPressure || (product.cableLength ? `${product.cableLength} m` : product.head || '-')}
+                </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-gray-500 font-medium">Type:</span>
-                <span className="font-semibold text-gray-800 truncate ml-1" title={product.phase}>
-                  {product.phase || '-'}
+                <span className="text-gray-500 font-medium">
+                  {product.solidHandling ? 'Solid:' : 'Type:'}
+                </span>
+                <span className="font-semibold text-gray-800 truncate ml-1" title={product.solidHandling ? `${product.solidHandling} mm` : product.phase}>
+                  {product.solidHandling ? `${product.solidHandling} mm` : (product.phase || '-')}
                 </span>
               </div>
             </div>
 
-            {product.discharge && (
+            {(product.discharge || product.flowRate) && (
               <div className="flex items-center justify-between pt-1 border-t border-slate-200/60 text-[9px] sm:text-[10px]">
-                <span className="text-gray-500 font-medium">Discharge:</span>
-                <span className="font-semibold text-blue-800 truncate ml-1" title={product.discharge}>
-                  {product.discharge}
+                <span className="text-gray-500 font-medium">{product.flowRate ? 'Flow Rate:' : 'Discharge:'}</span>
+                <span className="font-semibold text-blue-800 truncate ml-1" title={product.flowRate || product.discharge}>
+                  {product.flowRate || product.discharge}
                 </span>
               </div>
             )}
@@ -162,14 +172,26 @@ export default function ProductCard({
                 ₹{product.price.toLocaleString('en-IN')}
               </span>
             </div>
+            {product.rcp && (
+              <div className="text-right">
+                <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-sky-600 block">
+                  RCP
+                </span>
+                <span className="text-xs sm:text-sm font-bold text-sky-800">
+                  ₹{product.rcp.toLocaleString('en-IN')}
+                </span>
+              </div>
+            )}
             {!isTiny && product.originalPrice && product.originalPrice > product.price && (
               <span className="text-xs text-gray-400 line-through">
                 ₹{product.originalPrice.toLocaleString('en-IN')}
               </span>
             )}
-            <span className="text-[9px] sm:text-[10px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 sm:px-2 py-0.5 rounded-full self-center">
-              Genuine C.R.I.
-            </span>
+            {!product.rcp && (
+              <span className="text-[9px] sm:text-[10px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 sm:px-2 py-0.5 rounded-full self-center">
+                Genuine C.R.I.
+              </span>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
