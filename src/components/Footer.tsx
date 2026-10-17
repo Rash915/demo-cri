@@ -61,7 +61,7 @@ export default function Footer({ onCategorySelect }: FooterProps) {
              </div>
           </div>
           <p className="text-gray-400 text-xs sm:text-sm leading-relaxed mb-5">
-            <strong className="inline-flex items-center gap-1.5 text-red-500 font-bold"><img src={hebronLogo} alt="Hebron Logo" className="h-3.5 w-auto inline-block object-contain" />Hebron<sup className="text-[0.6em] font-bold align-super ml-0.5">®</sup> Enterprises</strong> is the official authorised dealer and distributor for C.R.I. Pumps — offering 100% authentic pumps, motors, valves, and pipes with genuine manufacturer warranties and expert sales support.
+            <strong className="inline-flex items-center gap-1.5 text-white font-bold"><img src={hebronLogo} alt="Hebron Logo" className="h-3.5 w-auto inline-block object-contain" />Hebron<sup className="text-[0.6em] font-bold align-super ml-0.5">®</sup> Enterprises</strong> is the official authorised dealer and distributor for C.R.I. Pumps — offering 100% authentic pumps, motors, valves, and pipes with genuine manufacturer warranties and expert sales support.
           </p>
           <div className="space-y-2.5 text-xs sm:text-sm">
             <div className="flex items-start gap-2">
