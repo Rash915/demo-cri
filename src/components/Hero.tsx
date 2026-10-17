@@ -88,8 +88,9 @@ export default function Hero({ onShopNow, onCategorySelect }: HeroProps) {
             >
               <div className="relative w-24 sm:w-28 h-20 sm:h-22 rounded-xl overflow-hidden shrink-0 shadow-md">
                 <img
-                  src="/agri_pump_category.jpg"
+                  src="https://images.unsplash.com/photo-1592417817098-8f3d69109853?w=600&auto=format&fit=crop&q=80"
                   alt="Agri Pumps"
+                  loading="eager"
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-gray-950/70 to-transparent" />
@@ -122,7 +123,7 @@ export default function Hero({ onShopNow, onCategorySelect }: HeroProps) {
                 badge: 'Home & Villa',
                 desc: 'Booster & Monoblocks',
                 icon: '🏠',
-                image: '/home_pump_category.png',
+                image: 'https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=600&auto=format&fit=crop&q=80',
               },
               {
                 id: 'tiny',
@@ -130,7 +131,7 @@ export default function Hero({ onShopNow, onCategorySelect }: HeroProps) {
                 badge: 'Mini Power',
                 desc: 'Compact Domestic Pumps',
                 icon: '⚡',
-                image: '/tiny_pump_category.jpg',
+                image: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=600&auto=format&fit=crop&q=80',
               },
               {
                 id: 'next-gen',
@@ -138,7 +139,7 @@ export default function Hero({ onShopNow, onCategorySelect }: HeroProps) {
                 badge: 'Smart Tech',
                 desc: 'IoT & Solar Inverters',
                 icon: '🚀',
-                image: '/nextgen_pump_category.jpg',
+                image: 'https://images.unsplash.com/photo-1509391365360-2e959784a276?w=600&auto=format&fit=crop&q=80',
               },
               {
                 id: 'accessories',
@@ -146,7 +147,7 @@ export default function Hero({ onShopNow, onCategorySelect }: HeroProps) {
                 badge: '100% Genuine',
                 desc: 'Starters, Panels & Spares',
                 icon: '🔧',
-                image: '/motor_pump_accessories_category.png',
+                image: 'https://images.unsplash.com/photo-1581092162384-8987c1d64718?w=600&auto=format&fit=crop&q=80',
               },
             ].map((cat) => (
               <button
@@ -159,6 +160,7 @@ export default function Hero({ onShopNow, onCategorySelect }: HeroProps) {
                   <img
                     src={cat.image}
                     alt={cat.name}
+                    loading="eager"
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-gray-950/75 via-gray-950/20 to-transparent" />
