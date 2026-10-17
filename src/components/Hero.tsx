@@ -89,7 +89,7 @@ export default function Hero({ onShopNow, onCategorySelect }: HeroProps) {
             >
               <div className="relative w-24 sm:w-28 h-20 sm:h-22 rounded-xl overflow-hidden shrink-0 shadow-md">
                 <img
-                  src="https://images.unsplash.com/photo-1592417817098-8f3d69109853?w=600&auto=format&fit=crop&q=80"
+                  src={categoryImages.agri}
                   alt="Agri Pumps"
                   loading="eager"
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
@@ -124,7 +124,7 @@ export default function Hero({ onShopNow, onCategorySelect }: HeroProps) {
                 badge: 'Home & Villa',
                 desc: 'Booster & Monoblocks',
                 icon: '🏠',
-                image: 'https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=600&auto=format&fit=crop&q=80',
+                image: categoryImages.residential,
               },
               {
                 id: 'tiny',
@@ -132,7 +132,7 @@ export default function Hero({ onShopNow, onCategorySelect }: HeroProps) {
                 badge: 'Mini Power',
                 desc: 'Compact Domestic Pumps',
                 icon: '⚡',
-                image: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=600&auto=format&fit=crop&q=80',
+                image: categoryImages.tiny,
               },
               {
                 id: 'next-gen',
@@ -140,7 +140,7 @@ export default function Hero({ onShopNow, onCategorySelect }: HeroProps) {
                 badge: 'Smart Tech',
                 desc: 'IoT & Solar Inverters',
                 icon: '🚀',
-                image: 'https://images.unsplash.com/photo-1509391365360-2e959784a276?w=600&auto=format&fit=crop&q=80',
+                image: categoryImages['next-gen'],
               },
               {
                 id: 'accessories',
@@ -148,7 +148,7 @@ export default function Hero({ onShopNow, onCategorySelect }: HeroProps) {
                 badge: '100% Genuine',
                 desc: 'Starters, Panels & Spares',
                 icon: '🔧',
-                image: 'https://images.unsplash.com/photo-1581092162384-8987c1d64718?w=600&auto=format&fit=crop&q=80',
+                image: categoryImages.accessories,
               },
             ].map((cat) => (
               <button
