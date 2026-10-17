@@ -381,7 +381,7 @@ export default function CategoryPage({
           <div className="hidden sm:flex items-center gap-2 text-gray-600 text-[11px]">
             <img src={hebronLogo} alt="Hebron Logo" className="h-4 w-auto object-contain" />
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="font-semibold text-gray-700">Hebron Enterprises — Authorised C.R.I. Dealer</span>
+            <span className="font-semibold text-gray-700">Hebron<sup className="text-[0.6em] font-bold align-super ml-0.5">®</sup> Enterprises — Authorised C.R.I. Dealer</span>
           </div>
         </div>
       </div>
@@ -786,7 +786,7 @@ export default function CategoryPage({
             Why Choose Genuine C.R.I. Products?
           </h2>
           <p className="text-gray-600 text-xs mb-4 max-w-3xl leading-relaxed">
-            Every C.R.I. pump is engineered for high hydraulic efficiency, backed by ISO 9001:2015 precision manufacturing, and supported by <span className="inline-flex items-center gap-1.5"><img src={hebronLogo} alt="Hebron Logo" className="h-4 w-auto inline-block object-contain" /><strong>Hebron Enterprises</strong></span> authorized dealer sales & service.
+            Every C.R.I. pump is engineered for high hydraulic efficiency, backed by ISO 9001:2015 precision manufacturing, and supported by <span className="inline-flex items-center gap-1.5"><img src={hebronLogo} alt="Hebron Logo" className="h-4 w-auto inline-block object-contain" /><strong>Hebron<sup className="text-[0.6em] font-bold align-super ml-0.5">®</sup> Enterprises</strong></span> authorized dealer sales & service.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {[
@@ -804,7 +804,7 @@ export default function CategoryPage({
                   <span className="flex flex-col gap-1">
                     <span className="flex items-center gap-1.5">
                       <img src={hebronLogo} alt="Hebron Logo" className="h-4 w-auto object-contain" />
-                      <strong>Hebron Enterprises</strong>
+                      <strong>Hebron<sup className="text-[0.6em] font-bold align-super ml-0.5">®</sup> Enterprises</strong>
                     </span>
                     <span>expert borewell depth sizing and technical consultation.</span>
                   </span>
@@ -871,7 +871,7 @@ export default function CategoryPage({
                 {formData.submittedType === 'order' ? 'Order Request Submitted!' : 'Service Request Registered!'}
               </h3>
               <p className="text-[11px] text-green-700 max-w-md mx-auto flex items-center justify-center gap-1.5">
-                 Thank you! Our <span className="inline-flex items-center gap-1.5"><img src={hebronLogo} alt="Hebron Logo" className="h-4 w-auto inline-block object-contain" /><strong>Hebron Enterprises</strong></span> representative will contact you shortly with confirmed pricing and dispatch details.
+                 Thank you! Our <span className="inline-flex items-center gap-1.5"><img src={hebronLogo} alt="Hebron Logo" className="h-4 w-auto inline-block object-contain" /><strong>Hebron<sup className="text-[0.6em] font-bold align-super ml-0.5">®</sup> Enterprises</strong></span> representative will contact you shortly with confirmed pricing and dispatch details.
                </p>
             </div>
           ) : (

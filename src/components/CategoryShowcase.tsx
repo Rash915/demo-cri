@@ -135,7 +135,7 @@ export default function CategoryShowcase({ onCategorySelect }: CategoryShowcaseP
                 <div className="px-5 sm:px-6 py-3.5 bg-slate-50/80 border-t border-gray-100 flex items-center justify-between group-hover:bg-sky-50/50 transition-colors">
                   <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-600 group-hover:text-sky-900">
                     <img src={hebronLogo} alt="Hebron" className="h-3.5 w-auto object-contain" />
-                    <span>Hebron Authorised Pricing</span>
+                    <span>Hebron<sup className="text-[0.6em] font-bold align-super ml-0.5">®</sup> Authorised Pricing</span>
                   </span>
                   <button
                     onClick={() => onCategorySelect(cat.id)}

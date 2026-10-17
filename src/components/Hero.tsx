@@ -27,14 +27,14 @@ export default function Hero({ onShopNow, onCategorySelect }: HeroProps) {
         <div className="flex-1 text-white animate-fade-in text-center sm:text-left">
           <div className="inline-flex items-center gap-2 bg-amber-400 text-gray-950 text-xs sm:text-sm font-extrabold px-4 py-1.5 rounded-full mb-4 sm:mb-6 shadow-md border border-amber-300">
              <img src={hebronLogo} alt="Hebron Logo" className="h-4.5 sm:h-5 w-auto object-contain" />
-             <span>HEBRON ENTERPRISES — AUTHORISED DEALER OF C.R.I. PUMPS</span>
+             <span>HEBRON<sup className="text-[0.6em] font-bold align-super ml-0.5">®</sup> ENTERPRISES — AUTHORISED DEALER OF C.R.I. PUMPS</span>
            </div>
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-4" style={{ fontFamily: 'DM Serif Display, serif' }}>
             Powering Water.<br />
             <span className="text-amber-300">Empowering Life.</span>
           </h1>
           <p className="text-blue-100 text-sm sm:text-lg lg:text-xl mb-6 sm:mb-8 max-w-xl leading-relaxed mx-auto sm:mx-0">
-            Welcome to <strong className="inline-flex items-center gap-1.5"><img src={hebronLogo} alt="Hebron Logo" className="h-4.5 w-auto inline-block object-contain" />Hebron Enterprises</strong>, the authorised dealer for C.R.I. Pumps — serving 5 million+ farmers, homes, and industries with 100% genuine pumps & factory warranty.
+            Welcome to <strong className="inline-flex items-center gap-1.5"><img src={hebronLogo} alt="Hebron Logo" className="h-4.5 w-auto inline-block object-contain" />Hebron<sup className="text-[0.6em] font-bold align-super ml-0.5">®</sup> Enterprises</strong>, the authorised dealer for C.R.I. Pumps — serving 5 million+ farmers, homes, and industries with 100% genuine pumps & factory warranty.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center sm:justify-start">
             <button

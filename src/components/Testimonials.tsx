@@ -21,7 +21,7 @@ export default function Testimonials() {
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900" style={{ fontFamily: 'DM Serif Display, serif' }}>
           What Our Customers Say
         </h2>
-        <p className="text-gray-500 text-xs sm:text-sm mt-1 sm:mt-2">Genuine Google reviews from Hebron Enterprises & C.R.I. Pumps customers</p>
+        <p className="text-gray-500 text-xs sm:text-sm mt-1 sm:mt-2">Genuine Google reviews from Hebron<sup className="text-[0.6em] font-bold align-super ml-0.5">®</sup> Enterprises & C.R.I. Pumps customers</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">

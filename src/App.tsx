@@ -36,7 +36,7 @@ export default function App() {
       const rawHash = window.location.hash.replace(/^#\/?/, '');
       if (!rawHash || rawHash === 'home') {
         setPage('home');
-        document.title = 'Hebron Enterprises — Authorised C.R.I. Pumps Dealer';
+        document.title = 'Hebron® Enterprises — Authorised C.R.I. Pumps Dealer';
       } else if (rawHash.startsWith('category') || rawHash.startsWith('categories')) {
         const parts = rawHash.split('?');
         const pathPart = parts[0];
@@ -70,21 +70,21 @@ export default function App() {
         const catObj = categories.find(c => c.id === validCat);
         if (validCat === 'tiny') {
           document.title = sub !== 'All'
-            ? `${sub} — C.R.I. Tiny Pump Models & RCP Rates | Hebron Enterprises`
-            : 'C.R.I. Tiny Product Categories & Pumps | Official RCP Catalogue | Hebron Enterprises';
+            ? `${sub} — C.R.I. Tiny Pump Models & RCP Rates | Hebron® Enterprises`
+            : 'C.R.I. Tiny Product Categories & Pumps | Official RCP Catalogue | Hebron® Enterprises';
         } else {
           document.title = validCat === 'all'
-            ? 'All C.R.I. Pumps & Products | Hebron Enterprises'
+            ? 'All C.R.I. Pumps & Products | Hebron® Enterprises'
             : catObj 
-            ? `C.R.I. ${catObj.name} Pumps & Systems | Official Rate Contract | Hebron Enterprises`
-            : 'C.R.I. Pumps Department | Hebron Enterprises';
+            ? `C.R.I. ${catObj.name} Pumps & Systems | Official Rate Contract | Hebron® Enterprises`
+            : 'C.R.I. Pumps Department | Hebron® Enterprises';
         }
       } else if (rawHash.startsWith('search')) {
         const params = new URLSearchParams(rawHash.split('?')[1] || '');
         const q = params.get('q') || '';
         setSearchQuery(q);
         setPage('search');
-        document.title = `Search: "${q}" | Hebron Enterprises`;
+        document.title = `Search: "${q}" | Hebron® Enterprises`;
       }
     };
 

@@ -76,7 +76,7 @@ export default function BrowseCategories({
             <img src={hebronLogo} alt="Hebron Logo" className="h-4.5 w-auto object-contain" />
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             <span className="text-xs font-semibold text-gray-600">
-              Hebron Enterprises — Authorised C.R.I. Dealer
+              Hebron<sup className="text-[0.6em] font-bold align-super ml-0.5">®</sup> Enterprises — Authorised C.R.I. Dealer
             </span>
           </div>
         </div>
