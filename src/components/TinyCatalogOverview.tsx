@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Product, tinySubcategoriesMeta } from '../data';
 import { SearchIcon } from './icons';
+import { hebronLogo } from '../assets/logoData';
 
 interface TinyCatalogOverviewProps {
   subcategories: string[];
@@ -85,11 +86,11 @@ export default function TinyCatalogOverview({
             <span className="text-gray-400">/</span>
             <span className="text-blue-700 font-bold">Tiny</span>
           </div>
-          <a href="file:///C:/Users/Rashmi/Downloads/Untitled-2.pdf" target="_blank" rel="noopener noreferrer" className="hidden sm:flex items-center gap-2 text-gray-600 text-[11px] hover:opacity-80 transition-opacity">
-            <img src="/hebron-logo.png" alt="Hebron Logo" className="h-4 w-auto object-contain" />
+          <div className="hidden sm:flex items-center gap-2 text-gray-600 text-[11px]">
+            <img src={hebronLogo} alt="Hebron Logo" className="h-4 w-auto object-contain" />
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             <span className="font-semibold text-gray-700">Hebron Enterprises — Authorised C.R.I. Dealer</span>
-          </a>
+          </div>
         </div>
       </div>
 

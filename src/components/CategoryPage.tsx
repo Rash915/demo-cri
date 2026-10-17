@@ -3,6 +3,7 @@ import { categories, products, Product, Category, tinySubcategoriesMeta } from '
 import ProductCard from './ProductCard';
 import { SearchIcon, CartIcon } from './icons';
 import TinyCatalogOverview from './TinyCatalogOverview';
+import { hebronLogo } from '../assets/logoData';
 
 interface CategoryPageProps {
   categoryId: string;
@@ -377,11 +378,11 @@ export default function CategoryPage({
               </>
             )}
           </div>
-          <a href="file:///C:/Users/Rashmi/Downloads/Untitled-2.pdf" target="_blank" rel="noopener noreferrer" className="hidden sm:flex items-center gap-2 text-gray-600 text-[11px] hover:opacity-80 transition-opacity">
-            <img src="/hebron-logo.png" alt="Hebron Logo" className="h-4 w-auto object-contain" />
+          <div className="hidden sm:flex items-center gap-2 text-gray-600 text-[11px]">
+            <img src={hebronLogo} alt="Hebron Logo" className="h-4 w-auto object-contain" />
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             <span className="font-semibold text-gray-700">Hebron Enterprises — Authorised C.R.I. Dealer</span>
-          </a>
+          </div>
         </div>
       </div>
 
@@ -785,7 +786,7 @@ export default function CategoryPage({
             Why Choose Genuine C.R.I. Products?
           </h2>
           <p className="text-gray-600 text-xs mb-4 max-w-3xl leading-relaxed">
-            Every C.R.I. pump is engineered for high hydraulic efficiency, backed by ISO 9001:2015 precision manufacturing, and supported by <a href="file:///C:/Users/Rashmi/Downloads/Untitled-2.pdf" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:opacity-80 transition-opacity"><img src="/hebron-logo.png" alt="Hebron Logo" className="h-4 w-auto inline-block object-contain" /><strong>Hebron Enterprises</strong></a> authorized dealer sales & service.
+            Every C.R.I. pump is engineered for high hydraulic efficiency, backed by ISO 9001:2015 precision manufacturing, and supported by <span className="inline-flex items-center gap-1.5"><img src={hebronLogo} alt="Hebron Logo" className="h-4 w-auto inline-block object-contain" /><strong>Hebron Enterprises</strong></span> authorized dealer sales & service.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {[
@@ -801,10 +802,10 @@ export default function CategoryPage({
                 title: 'Authorised Dealer Support',
                 desc: (
                   <span className="flex flex-col gap-1">
-                    <a href="file:///C:/Users/Rashmi/Downloads/Untitled-2.pdf" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:opacity-80 transition-opacity">
-                      <img src="/hebron-logo.png" alt="Hebron Logo" className="h-4 w-auto object-contain" />
+                    <span className="flex items-center gap-1.5">
+                      <img src={hebronLogo} alt="Hebron Logo" className="h-4 w-auto object-contain" />
                       <strong>Hebron Enterprises</strong>
-                    </a>
+                    </span>
                     <span>expert borewell depth sizing and technical consultation.</span>
                   </span>
                 ),
@@ -870,7 +871,7 @@ export default function CategoryPage({
                 {formData.submittedType === 'order' ? 'Order Request Submitted!' : 'Service Request Registered!'}
               </h3>
               <p className="text-[11px] text-green-700 max-w-md mx-auto flex items-center justify-center gap-1.5">
-                 Thank you! Our <a href="file:///C:/Users/Rashmi/Downloads/Untitled-2.pdf" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:opacity-80 transition-opacity"><img src="/hebron-logo.png" alt="Hebron Logo" className="h-4 w-auto inline-block object-contain" /><strong>Hebron Enterprises</strong></a> representative will contact you shortly with confirmed pricing and dispatch details.
+                 Thank you! Our <span className="inline-flex items-center gap-1.5"><img src={hebronLogo} alt="Hebron Logo" className="h-4 w-auto inline-block object-contain" /><strong>Hebron Enterprises</strong></span> representative will contact you shortly with confirmed pricing and dispatch details.
                </p>
             </div>
           ) : (

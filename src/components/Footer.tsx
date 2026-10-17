@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ShieldIcon, LockIcon, PhoneIcon, MailIcon, MapPinIcon } from './icons';
 import { categories } from '../data';
+import { hebronLogo, criLogo } from '../assets/logoData';
 
 interface FooterProps {
   onCategorySelect: (id: string) => void;
@@ -43,24 +44,24 @@ export default function Footer({ onCategorySelect }: FooterProps) {
           <div className="mb-4 flex items-center gap-3">
             <div className="bg-white px-3 py-2 rounded-lg shadow-sm inline-block">
               <img 
-                src="https://www.crifluidsystems.com/za/wp-content/uploads/2021/02/cri-logo-new.png" 
+                src={criLogo} 
                 alt="C.R.I. Pumps Logo" 
                 className="h-9 sm:h-10 w-auto object-contain"
               />
             </div>
-            <a href="file:///C:/Users/Rashmi/Downloads/Untitled-2.pdf" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity group">
-               <img src="/hebron-logo.png" alt="Hebron Enterprises Logo" className="h-9 w-auto object-contain" />
+            <div className="flex items-center gap-2.5">
+               <img src={hebronLogo} alt="Hebron Enterprises Logo" className="h-9 w-auto object-contain" />
                <div className="flex flex-col items-start">
                  <div className="flex items-center gap-2 mb-0.5">
-                   <h3 className="text-amber-400 font-extrabold text-base tracking-wider uppercase group-hover:text-amber-300">HEBRON ENTERPRISES</h3>
+                   <h3 className="text-amber-400 font-extrabold text-base tracking-wider uppercase">HEBRON ENTERPRISES</h3>
                  </div>
                  <p className="text-[10px] text-blue-300 font-bold uppercase tracking-wider">Authorised Dealer</p>
                  <p className="text-[10px] text-gray-400 font-mono mt-0.5">GSTIN: 33ABSPV1177C1ZH</p>
                </div>
-             </a>
+             </div>
           </div>
           <p className="text-gray-400 text-xs sm:text-sm leading-relaxed mb-5">
-            <strong className="inline-flex items-center gap-1.5"><img src="/hebron-logo.png" alt="Hebron Logo" className="h-3.5 w-auto inline-block object-contain" />Hebron Enterprises</strong> is the official authorised dealer and distributor for C.R.I. Pumps — offering 100% authentic pumps, motors, valves, and pipes with genuine manufacturer warranties and expert sales support.
+            <strong className="inline-flex items-center gap-1.5"><img src={hebronLogo} alt="Hebron Logo" className="h-3.5 w-auto inline-block object-contain" />Hebron Enterprises</strong> is the official authorised dealer and distributor for C.R.I. Pumps — offering 100% authentic pumps, motors, valves, and pipes with genuine manufacturer warranties and expert sales support.
           </p>
           <div className="space-y-2.5 text-xs sm:text-sm">
             <div className="flex items-start gap-2">

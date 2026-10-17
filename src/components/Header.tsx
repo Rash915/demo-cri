@@ -3,6 +3,7 @@ import { SearchIcon, CartIcon, HeartIcon, UserIcon, GlobeIcon, ChevronDownIcon, 
 import { categories } from '../data';
 import { UserProfile } from './AuthModal';
 import AwardBanner from './AwardBanner';
+import { hebronLogo, criLogo } from '../assets/logoData';
 
 interface HeaderProps {
   currentPage?: string;
@@ -52,21 +53,18 @@ export default function Header({
       {/* 1. TOPMOST BANNER: HEBRON ENTERPRISE - AUTHORIZED DEALER */}
       <div className="w-full bg-blue-700 sm:bg-blue-800 border-b-2 border-blue-900 py-3 sm:py-4 px-3 sm:px-4 text-center shadow-md">
         <div className="max-w-7xl mx-auto flex items-center justify-center">
-          <a
-            href="file:///C:/Users/Rashmi/Downloads/Untitled-2.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2.5 sm:gap-3.5 text-red-500 hover:text-red-400 font-black text-sm sm:text-xl md:text-2xl lg:text-3xl tracking-wider sm:tracking-widest uppercase transition-all hover:scale-[1.01]"
+          <div
+            className="inline-flex items-center justify-center gap-2.5 sm:gap-3.5 text-red-500 font-black text-sm sm:text-xl md:text-2xl lg:text-3xl tracking-wider sm:tracking-widest uppercase"
             style={{
               fontWeight: 900,
               WebkitTextStroke: '0.5px currentColor',
               textShadow: '0 2px 4px rgba(0, 0, 0, 0.45)',
             }}
-            title="Hebron Enterprise — Authorized Dealer Certificate"
+            title="Hebron Enterprise — Authorized Dealer"
           >
-            <img src="/hebron-logo.png" alt="Hebron Logo" className="h-6 sm:h-8 md:h-9 lg:h-10 w-auto inline-block object-contain drop-shadow-sm" />
+            <img src={hebronLogo} alt="Hebron Logo" className="h-6 sm:h-8 md:h-9 lg:h-10 w-auto inline-block object-contain drop-shadow-sm" />
             <span>HEBRON ENTERPRISE - AUTHORIZED DEALER</span>
-          </a>
+          </div>
         </div>
       </div>
 
@@ -98,7 +96,7 @@ export default function Header({
               >
                 <div className="flex items-center gap-1.5 sm:gap-2">
                   <img 
-                    src="https://www.crifluidsystems.com/za/wp-content/uploads/2021/02/cri-logo-new.png" 
+                    src={criLogo} 
                     alt="C.R.I. Pumps Logo" 
                     className="h-8 sm:h-11 w-auto object-contain transition-transform group-hover:scale-105"
                   />
@@ -209,13 +207,13 @@ export default function Header({
             <div className="fixed inset-0 bg-black/40 z-40 md:hidden backdrop-blur-xs" onClick={() => setMobileMenuOpen(false)} />
             <div className="md:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-200 shadow-2xl z-50 max-h-[80vh] overflow-y-auto animate-fade-in">
               <div className="p-4 space-y-1">
-                  <a href="file:///C:/Users/Rashmi/Downloads/Untitled-2.pdf" target="_blank" rel="noopener noreferrer" className="bg-gradient-to-r from-amber-500 to-amber-400 p-3 rounded-xl text-gray-950 font-extrabold flex flex-col items-center justify-center mb-3 shadow-sm hover:opacity-90 transition-opacity">
+                  <div className="bg-gradient-to-r from-amber-500 to-amber-400 p-3 rounded-xl text-gray-950 font-extrabold flex flex-col items-center justify-center mb-3 shadow-sm">
                      <div className="flex items-center gap-2 mb-1">
-                       <img src="/hebron-logo.png" alt="Hebron Logo" className="h-6 w-auto object-contain" />
+                       <img src={hebronLogo} alt="Hebron Logo" className="h-6 w-auto object-contain" />
                        <p className="text-sm tracking-wider uppercase font-black">HEBRON ENTERPRISES</p>
                      </div>
                      <p className="text-[10px] font-bold text-gray-900 tracking-widest uppercase mt-0.5 text-center">Authorised Main Dealer — C.R.I. Pumps</p>
-                   </a>
+                   </div>
                 <div className="flex items-center justify-between pb-3 mb-2 border-b border-gray-100">
                   {user ? (
                     <div className="flex items-center gap-2">
@@ -416,13 +414,13 @@ export default function Header({
             </div>
 
             {/* Drawer Footer */}
-            <a href="file:///C:/Users/Rashmi/Downloads/Untitled-2.pdf" target="_blank" rel="noopener noreferrer" className="p-3.5 bg-slate-100 border-t border-gray-200 flex items-center justify-center gap-2.5 text-center text-xs text-gray-600 hover:bg-slate-200 transition-colors">
-               <img src="/hebron-logo.png" alt="Hebron Logo" className="h-7 w-auto object-contain" />
+            <div className="p-3.5 bg-slate-100 border-t border-gray-200 flex items-center justify-center gap-2.5 text-center text-xs text-gray-600">
+               <img src={hebronLogo} alt="Hebron Logo" className="h-7 w-auto object-contain" />
                <div className="text-left">
                  <p className="font-bold text-gray-900">Hebron Enterprises</p>
                  <p className="text-[11px] text-gray-500 mt-0.5">Authorised Main Dealer • 100% Factory Warranty</p>
                </div>
-             </a>
+             </div>
           </aside>
         </>
       )}
