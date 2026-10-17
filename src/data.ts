@@ -1,5 +1,6 @@
 import agriCatalogueRaw from './data/agriCatalogue.json';
 import { tinyCatalogueProducts } from './data/tinyCatalogue';
+import { categoryImages } from './assets/categoryImages';
 
 export interface Product {
   id: string;
@@ -53,7 +54,7 @@ export const categories: Category[] = [
     id: 'agri',
     name: 'Agri',
     icon: '🌾',
-    image: 'https://images.unsplash.com/photo-1592417817098-8f3d69109853?w=800&auto=format&fit=crop&q=80',
+    image: categoryImages.agri,
     description: 'Complete verified C.R.I. Agricultural pump range from official Rate Contract Price List (Tamil Nadu). Featuring 3-Phase Monoblocks, Horizontal & Vertical Openwells, and 4", 5"/4", 6" Submersibles.',
     subcategories: [
       '3 Phase Monoblock - JUMBO',
@@ -78,7 +79,7 @@ export const categories: Category[] = [
     id: 'residential',
     name: 'Residential',
     icon: '🏠',
-    image: 'https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=800&auto=format&fit=crop&q=80',
+    image: categoryImages.residential,
     description: 'High-performance residential domestic pumps for homes, apartments, and villas. Whisper-quiet, rust-resistant, and built for steady high water pressure.',
     subcategories: ['Booster Pumps', 'Pressure Pumps', 'Mini Monoblock', 'Self-Priming Pumps', 'Submersible Borewell'],
     bgColor: '#F0FDF4',
@@ -87,7 +88,7 @@ export const categories: Category[] = [
     id: 'tiny',
     name: 'Tiny',
     icon: '⚡',
-    image: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=800&auto=format&fit=crop&q=80',
+    image: categoryImages.tiny,
     description: 'C.R.I. Tiny series pumps are ultra-compact mini powerhouses engineered for tight spaces, household overhead tanks, gardens, and light utility.',
     subcategories: [
       'PLANO',
@@ -111,7 +112,7 @@ export const categories: Category[] = [
     id: 'next-gen',
     name: 'Next Gen',
     icon: '🚀',
-    image: 'https://images.unsplash.com/photo-1509391365360-2e959784a276?w=800&auto=format&fit=crop&q=80',
+    image: categoryImages['next-gen'],
     description: 'Next-Gen intelligent smart pumping solutions featuring IoT smartphone monitoring, BLDC motors, variable frequency inverters, and automatic sensor control.',
     subcategories: ['Smart IoT Pumps', 'BLDC Inverter Pumps', 'Smart Digital Boosters', 'Solar Variable Inverters', 'Smart Telemetry Units'],
     bgColor: '#F5F3FF',
@@ -120,7 +121,7 @@ export const categories: Category[] = [
     id: 'accessories',
     name: 'Accessories',
     icon: '🔧',
-    image: 'https://images.unsplash.com/photo-1581092162384-8987c1d64718?w=800&auto=format&fit=crop&q=80',
+    image: categoryImages.accessories,
     description: '100% genuine C.R.I. accessories including digital motor starters, heavy brass foot valves, submersible cables, pressure switches, and maintenance spares.',
     subcategories: ['Control Panels & Starters', 'Foot Valves & Check Valves', 'Submersible Cables', 'Pressure Switches & Gauges', 'Capacitors & Spares'],
     bgColor: '#FFF7ED',

@@ -1,4 +1,5 @@
 import { hebronLogo } from '../assets/logoData';
+import { categoryImages } from '../assets/categoryImages';
 
 interface HeroProps {
   onShopNow: () => void;
@@ -189,12 +190,12 @@ export default function Hero({ onShopNow, onCategorySelect }: HeroProps) {
         </div>
       </div>
 
-      {/* Bottom wave */}
-      <div className="absolute bottom-0 left-0 right-0">
-        <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-          <path d="M0 60L48 50C96 40 192 20 288 15C384 10 480 20 576 25C672 30 768 30 864 25C960 20 1056 10 1152 12.5C1248 15 1344 35 1392 45L1440 55V60H0Z" fill="var(--background)" />
-        </svg>
-      </div>
-    </section>
+{/* Bottom wave */ }
+<div className="absolute bottom-0 left-0 right-0">
+  <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <path d="M0 60L48 50C96 40 192 20 288 15C384 10 480 20 576 25C672 30 768 30 864 25C960 20 1056 10 1152 12.5C1248 15 1344 35 1392 45L1440 55V60H0Z" fill="var(--background)" />
+  </svg>
+</div>
+    </section >
   );
 }
