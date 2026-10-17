@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { TruckIcon, ShieldIcon, LockIcon, PhoneIcon, MailIcon, MapPinIcon } from './icons';
+import { ShieldIcon, LockIcon, PhoneIcon, MailIcon, MapPinIcon } from './icons';
 import { categories } from '../data';
 
 interface FooterProps {
@@ -19,14 +19,13 @@ export default function Footer({ onCategorySelect }: FooterProps) {
     <footer className="bg-gray-900 text-gray-300">
       {/* Trust strip */}
       <div className="bg-blue-800 py-5 sm:py-6">
-        <div className="w-full px-4 sm:px-6 md:px-8 grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-8">
           {[
-            { icon: <TruckIcon size={22} />, title: 'Free Delivery', sub: 'On orders above ₹999' },
-            { icon: <ShieldIcon size={22} />, title: 'Warranty', sub: '1–5 Year Warranty' },
+            { icon: <ShieldIcon size={22} />, title: 'Warranty', sub: '1–2 Year Warranty' },
             { icon: <LockIcon size={22} />, title: 'Secure Payments', sub: '100% Safe & Encrypted' },
-            { icon: <PhoneIcon size={22} />, title: 'Customer Support', sub: '9 AM – 6 PM, Mon–Sat' },
+            { icon: <PhoneIcon size={22} />, title: 'Customer Support', sub: '+91 98946 77798 (10 AM – 7 PM)' },
           ].map(item => (
-            <div key={item.title} className="flex items-center gap-3 text-white">
+            <div key={item.title} className="flex items-center gap-3 text-white sm:justify-center">
               <div className="text-blue-300 shrink-0">{item.icon}</div>
               <div>
                 <div className="font-semibold text-xs sm:text-sm">{item.title}</div>
@@ -49,18 +48,43 @@ export default function Footer({ onCategorySelect }: FooterProps) {
                 className="h-9 sm:h-10 w-auto object-contain"
               />
             </div>
-            <div>
-              <h3 className="text-amber-400 font-extrabold text-base tracking-wider uppercase">HEBRON ENTERPRISES</h3>
-              <p className="text-[10px] text-blue-300 font-bold uppercase tracking-wider">Authorised Main Dealer</p>
-            </div>
+            <a href="file:///C:/Users/Rashmi/Downloads/Untitled-2.pdf" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity group">
+               <img src="/hebron-logo.png" alt="Hebron Enterprises Logo" className="h-9 w-auto object-contain" />
+               <div className="flex flex-col items-start">
+                 <div className="flex items-center gap-2 mb-0.5">
+                   <h3 className="text-amber-400 font-extrabold text-base tracking-wider uppercase group-hover:text-amber-300">HEBRON ENTERPRISES</h3>
+                 </div>
+                 <p className="text-[10px] text-blue-300 font-bold uppercase tracking-wider">Authorised Dealer</p>
+                 <p className="text-[10px] text-gray-400 font-mono mt-0.5">GSTIN: 33ABSPV1177C1ZH</p>
+               </div>
+             </a>
           </div>
-          <p className="text-gray-400 text-xs sm:text-sm leading-relaxed mb-6">
-            <strong>Hebron Enterprises</strong> is the official authorised main dealer and distributor for C.R.I. Pumps — offering 100% authentic pumps, motors, valves, and pipes with genuine manufacturer warranties and expert sales support.
+          <p className="text-gray-400 text-xs sm:text-sm leading-relaxed mb-5">
+            <strong className="inline-flex items-center gap-1.5"><img src="/hebron-logo.png" alt="Hebron Logo" className="h-3.5 w-auto inline-block object-contain" />Hebron Enterprises</strong> is the official authorised dealer and distributor for C.R.I. Pumps — offering 100% authentic pumps, motors, valves, and pipes with genuine manufacturer warranties and expert sales support.
           </p>
-          <div className="space-y-2 text-xs sm:text-sm">
-            <div className="flex items-start gap-2"><span className="text-blue-400 shrink-0 mt-0.5"><MapPinIcon size={16} /></span><span>Hebron Enterprises, Main Dealer Outlet, CRI Road, Coimbatore – 641 001, Tamil Nadu</span></div>
-            <div className="flex items-center gap-2"><span className="text-blue-400 shrink-0"><PhoneIcon size={16} /></span><span>+91 98765 43210 / +91 422 456 7890</span></div>
-            <div className="flex items-center gap-2"><span className="text-blue-400 shrink-0"><MailIcon size={16} /></span><span>sales@hebronenterprises.com</span></div>
+          <div className="space-y-2.5 text-xs sm:text-sm">
+            <div className="flex items-start gap-2">
+              <span className="text-blue-400 shrink-0 mt-0.5"><MapPinIcon size={16} /></span>
+              <span>30E, Opp. Church, Dr. Nanjappa Road, Coimbatore – 641 018</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-blue-400 shrink-0"><PhoneIcon size={16} /></span>
+              <div className="flex flex-wrap items-center gap-x-2">
+                <a href="tel:+919894677798" className="hover:text-amber-300 transition-colors font-semibold text-white">
+                  +91 98946 77798
+                </a>
+                <span className="text-gray-500">/</span>
+                <a href="tel:04224393939" className="hover:text-amber-300 transition-colors">
+                  0422 4393939
+                </a>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-blue-400 shrink-0"><MailIcon size={16} /></span>
+              <a href="mailto:hebroncripumps@gmail.com" className="hover:text-amber-300 transition-colors">
+                hebroncripumps@gmail.com
+              </a>
+            </div>
           </div>
         </div>
 
@@ -130,14 +154,16 @@ export default function Footer({ onCategorySelect }: FooterProps) {
             <h4 className="text-white text-xs sm:text-sm font-medium mb-3">Follow Us</h4>
             <div className="flex gap-3">
               {[
-                { label: 'FB', color: '#1877F2' },
-                { label: 'TW', color: '#1DA1F2' },
-                { label: 'YT', color: '#FF0000' },
-                { label: 'IN', color: '#0A66C2' },
+                { label: 'YT', color: '#FF0000', href: 'https://www.youtube.com/@HebronCriTV' },
+                { label: 'FB', color: '#1877F2', href: 'https://www.facebook.com/share/r/19nRdjEZz2/' },
+                { label: 'IG', color: '#E1306C', href: 'https://www.instagram.com/hebroncripumps/' },
               ].map(s => (
                 <a
                   key={s.label}
-                  href="#"
+                  href={s.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={`Visit our ${s.label} page`}
                   className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold hover:opacity-80 transition-opacity"
                   style={{ background: s.color }}
                 >

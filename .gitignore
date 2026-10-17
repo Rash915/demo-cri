@@ -1,4 +1,5 @@
 node_modules/
+/.opencode-skills/node_modules/
 dist/
 build/
 .cache/
@@ -18,4 +19,3 @@ logs/
 # repo root IS the workspace root, so these land inside this repo rather than
 # beside it.
 /.plugins/
-/.opencode-skills/

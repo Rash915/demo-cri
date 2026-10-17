@@ -71,12 +71,13 @@ export default function BrowseCategories({
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
+          <a href="file:///C:/Users/Rashmi/Downloads/Untitled-2.pdf" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <img src="/hebron-logo.png" alt="Hebron Logo" className="h-4.5 w-auto object-contain" />
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             <span className="text-xs font-semibold text-gray-600">
               Hebron Enterprises — Authorised C.R.I. Dealer
             </span>
-          </div>
+          </a>
         </div>
 
         {/* SPLIT-PANE EXPLORER CONTAINER */}
