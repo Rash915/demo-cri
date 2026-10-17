@@ -75,6 +75,10 @@ export default function Footer({ onCategorySelect }: FooterProps) {
                   +91 98946 77798
                 </a>
                 <span className="text-gray-500">/</span>
+                <a href="tel:+919894677740" className="hover:text-amber-300 transition-colors font-semibold text-white">
+                  98946 77740
+                </a>
+                <span className="text-gray-500">/</span>
                 <a href="tel:04224393939" className="hover:text-amber-300 transition-colors">
                   0422 4393939
                 </a>
@@ -84,6 +88,18 @@ export default function Footer({ onCategorySelect }: FooterProps) {
               <span className="text-blue-400 shrink-0"><MailIcon size={16} /></span>
               <a href="mailto:hebroncripumps@gmail.com" className="hover:text-amber-300 transition-colors">
                 hebroncripumps@gmail.com
+              </a>
+            </div>
+            <div className="flex items-center gap-2 pt-1 border-t border-gray-800">
+              <span className="text-amber-400 shrink-0 font-bold text-xs">GST</span>
+              <span className="text-gray-300 font-mono text-xs">
+                GSTIN: <strong className="text-white font-bold tracking-wider">33ABSPV1177C1ZH</strong>
+              </span>
+            </div>
+            <div className="flex items-center gap-2 text-xs">
+              <span className="text-blue-400 shrink-0 font-bold">🌐</span>
+              <a href="https://www.hebroncoimbatore.com" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-amber-300 transition-colors">
+                www.hebroncoimbatore.com
               </a>
             </div>
           </div>
