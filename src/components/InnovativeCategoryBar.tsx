@@ -112,7 +112,7 @@ export default function InnovativeCategoryBar({
                       {cat.name}
                     </span>
                     <span className="text-[10px] text-gray-500 font-medium block truncate">
-                      {cat.subcategories.length} Models
+                      {cat.subcategories.length} Subcategories
                     </span>
                   </div>
                 </button>

@@ -76,6 +76,18 @@ export default function App() {
           document.title = sub !== 'All'
             ? `${sub} — C.R.I. NEXT GEN Models & Price List | Hebron Enterprises`
             : 'C.R.I. NEXT GEN Product Categories & Models | Official Price Catalogue | Hebron Enterprises';
+        } else if (validCat === 'residential') {
+          document.title = sub !== 'All'
+            ? `${sub} — C.R.I. Residential Models & Price List | Hebron Enterprises`
+            : 'C.R.I. Residential Product Categories & Models | Official Price Catalogue | Hebron Enterprises';
+        } else if (validCat === 'agri') {
+          document.title = sub !== 'All'
+            ? `${sub} — C.R.I. Agricultural Pump Models & Price List | Hebron Enterprises`
+            : 'C.R.I. Agricultural Product Categories & 369 Models | Official Price Catalogue | Hebron Enterprises';
+        } else if (validCat === 'accessories') {
+          document.title = sub !== 'All'
+            ? `${sub} — C.R.I. Accessories, Starters & Valves | Hebron Enterprises`
+            : 'C.R.I. Accessories, Starters & Valves | Official Price Catalogue | Hebron Enterprises';
         } else {
           document.title = validCat === 'all'
             ? 'All C.R.I. Pumps & Products | Hebron Enterprises'

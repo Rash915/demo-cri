@@ -1,9 +1,12 @@
 import { useState, useEffect, useMemo } from 'react';
-import { categories, products, Product, Category, tinySubcategoriesMeta, nextGenSubcategoriesMeta } from '../data';
+import { categories, products, Product, Category, tinySubcategoriesMeta, nextGenSubcategoriesMeta, residentialSubcategoriesMeta, agriSubcategoriesMeta, accessoriesSubcategoriesMeta } from '../data';
 import ProductCard from './ProductCard';
 import { SearchIcon, CartIcon } from './icons';
 import TinyCatalogOverview from './TinyCatalogOverview';
 import NextGenCatalogOverview from './NextGenCatalogOverview';
+import ResidentialCatalogOverview from './ResidentialCatalogOverview';
+import AgriCatalogOverview from './AgriCatalogOverview';
+import AccessoriesCatalogOverview from './AccessoriesCatalogOverview';
 
 interface CategoryPageProps {
   categoryId: string;
@@ -24,6 +27,36 @@ const sortOptions = [
   'Top Rated',
   'Model Name (A-Z)',
 ];
+
+const NEXT_GEN_GROUPS = [
+  { id: 'All', name: 'All Groups', shortName: 'All Next Gen', icon: '🚀' },
+  { id: 'JTS / CTSS Series', name: 'JTS / CTSS Series', shortName: 'JTS / CTSS', icon: '🛡️' },
+  { id: 'Booster Pumps', name: 'Booster Pumps & Systems', shortName: 'Booster Pumps', icon: '⚡' },
+  { id: 'Submersible and Surface Sewage / Drainage Pumps', name: 'Sewage & Drainage Pumps', shortName: 'Sewage & Drainage', icon: '🌊' },
+] as const;
+
+const nextGenSubcategoryShortLabels: Record<string, string> = {
+  'SS Monoblock Pumpsets Special Application – JTS': 'JTS Models',
+  'SS Monoblock Pumpsets Special Application – CTSS': 'CTSS Models',
+  'Mini Booster Pumps – TINY FORCE': 'TINY FORCE',
+  'Booster Pumps – BRISK': 'BRISK',
+  'Booster Pumps – MHBS': 'MHBS',
+  'Booster Pumps – I PREZ': 'I PREZ',
+  'Booster Pumps – I PREZ (Encloser Type)': 'I PREZ (Encloser)',
+  'Booster Pumps – MHS (Multistage Horizontal Pumps)': 'MHS',
+  'Automatic Pump Controller': 'Pump Controller',
+  'Mini Circulatory Pumps': 'Mini Circulatory',
+  'Float Switch': 'Float Switch',
+  'Surface Sewage / Drainage Monoblock Pumpsets': 'Surface Sewage',
+  'Mini Plastic Drainage Submersible Pumpsets': 'Mini Plastic Drainage',
+  'Mini SS Sewage & Drainage Pumpsets': 'Mini SS Sewage',
+  'Submersible Drainage Pumpsets': 'Drainage',
+  'Submersible Drainage / Sewage Pumpsets': 'Drainage / Sewage',
+  'Submersible Sewage Pumpsets': 'Sewage',
+  'Submersible Sewage Cutter Pumpsets': 'Sewage Cutter',
+  'Submersible & Central Delivery Sewage/Drainage Pumpsets': 'Central Delivery SS',
+  'Submersible Heavy Sewage Pumps': 'Heavy Sewage',
+};
 
 export default function CategoryPage({
   categoryId,
@@ -50,17 +83,22 @@ export default function CategoryPage({
   // Tier 2: Selected subcategory state ('All' | string)
   const [selectedSubcat, setSelectedSubcat] = useState<string>(initialSubcategory || 'All');
 
+  // Next Gen Group filter state ('All' | 'JTS / CTSS Series' | 'Booster Pumps' | 'Submersible and Surface Sewage / Drainage Pumps')
+  const [nextGenGroup, setNextGenGroup] = useState<string>(() => {
+    if (initialSubcategory && initialSubcategory !== 'All' && nextGenSubcategoriesMeta[initialSubcategory]) {
+      return nextGenSubcategoriesMeta[initialSubcategory].group;
+    }
+    return 'All';
+  });
+
   // Secondary filters & controls
   const [modelSearch, setModelSearch] = useState<string>('');
   const [selectedPhase, setSelectedPhase] = useState<string>('All');
   const [selectedHpRange, setSelectedHpRange] = useState<string>('All');
-  const [viewMode, setViewMode] = useState<'grid' | 'table'>(() => {
-    const norm = getNormalizedId(categoryId);
-    return norm === 'agri' || norm === 'next-gen' ? 'table' : 'grid';
-  });
+  const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
   const [sortBy, setSortBy] = useState('Featured');
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 24;
+  const pageSize = 36;
 
   // Order & Service Inquiry Form State
   const [requestType, setRequestType] = useState<'order' | 'service'>('order');
@@ -83,18 +121,22 @@ export default function CategoryPage({
   useEffect(() => {
     const nextCat = getNormalizedId(categoryId);
     setActiveCategory(nextCat);
+    setViewMode('grid');
   }, [categoryId]);
 
   useEffect(() => {
     if (initialSubcategory) {
       setSelectedSubcat(initialSubcategory);
+      if (initialSubcategory !== 'All' && nextGenSubcategoriesMeta[initialSubcategory]) {
+        setNextGenGroup(nextGenSubcategoriesMeta[initialSubcategory].group);
+      }
     }
   }, [initialSubcategory]);
 
   // Reset pagination when any filter changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [activeCategory, selectedSubcat, modelSearch, selectedPhase, selectedHpRange, sortBy]);
+  }, [activeCategory, selectedSubcat, nextGenGroup, modelSearch, selectedPhase, selectedHpRange, sortBy]);
 
   // Category objects list with 'All Products' prepended for Tier 1
   const tier1Categories = useMemo(() => {
@@ -137,11 +179,8 @@ export default function CategoryPage({
   const handleSelectCategory = (catId: string) => {
     setActiveCategory(catId);
     setSelectedSubcat('All'); // Reset subcategory when switching main category
-    if (catId === 'agri' || catId === 'next-gen') {
-      setViewMode('table');
-    } else {
-      setViewMode('grid');
-    }
+    setNextGenGroup('All');
+    setViewMode('grid');
     if (onCategoryChange) {
       onCategoryChange(catId, 'All');
     }
@@ -150,13 +189,21 @@ export default function CategoryPage({
   // Handler for Tier 2 Subcategory Selection
   const handleSelectSubcategory = (subcat: string) => {
     setSelectedSubcat(subcat);
-    if (activeCategory === 'agri' || activeCategory === 'next-gen') {
-      setViewMode('table');
-    } else {
-      setViewMode('grid');
+    if (activeCategory === 'next-gen' && subcat !== 'All' && nextGenSubcategoriesMeta[subcat]) {
+      setNextGenGroup(nextGenSubcategoriesMeta[subcat].group);
     }
+    setViewMode('grid');
     if (onCategoryChange) {
       onCategoryChange(activeCategory, subcat);
+    }
+  };
+
+  // Handler for Next Gen Major Group Tab Selection
+  const handleSelectNextGenGroup = (grp: string) => {
+    setNextGenGroup(grp);
+    setSelectedSubcat('All');
+    if (onCategoryChange) {
+      onCategoryChange('next-gen', 'All');
     }
   };
 
@@ -206,12 +253,49 @@ export default function CategoryPage({
     return map;
   }, [categoryProducts]);
 
+  // Group model counts for Next Gen tabs
+  const nextGenGroupCounts = useMemo(() => {
+    const counts: Record<string, number> = {
+      All: categoryProducts.length,
+      'JTS / CTSS Series': 0,
+      'Booster Pumps': 0,
+      'Submersible and Surface Sewage / Drainage Pumps': 0,
+    };
+    categoryProducts.forEach(p => {
+      if (p.group && counts[p.group] !== undefined) {
+        counts[p.group]++;
+      }
+    });
+    return counts;
+  }, [categoryProducts]);
+
+  // Subcategories displayed in Next Gen navigation bar
+  const displayedNextGenSubcategories = useMemo(() => {
+    if (nextGenGroup === 'All') {
+      return currentCategoryObj?.subcategories || [];
+    }
+    return (currentCategoryObj?.subcategories || []).filter(sub => {
+      const meta = nextGenSubcategoriesMeta[sub];
+      return meta && meta.group === nextGenGroup;
+    });
+  }, [nextGenGroup, currentCategoryObj]);
+
   // Filtered products list
   const filtered = useMemo(() => {
-    let list =
-      selectedSubcat === 'All'
-        ? categoryProducts
-        : categoryProducts.filter(p => p.subcategory === selectedSubcat);
+    let list = categoryProducts;
+
+    if (activeCategory === 'next-gen') {
+      if (selectedSubcat !== 'All' && selectedSubcat !== 'All-Models') {
+        list = list.filter(p => p.subcategory === selectedSubcat);
+      } else if (nextGenGroup !== 'All') {
+        list = list.filter(p => p.group === nextGenGroup);
+      }
+    } else {
+      list =
+        selectedSubcat === 'All' || selectedSubcat === 'All-Models'
+          ? categoryProducts
+          : categoryProducts.filter(p => p.subcategory === selectedSubcat);
+    }
 
     // Text search filter
     if (modelSearch.trim()) {
@@ -227,7 +311,7 @@ export default function CategoryPage({
           (p.maxPressure && p.maxPressure.toLowerCase().includes(q)) ||
           (p.flowRate && p.flowRate.toLowerCase().includes(q)) ||
           (p.solidHandling && p.solidHandling.toLowerCase().includes(q)) ||
-          (p.powerWatts && p.powerWatts.toLowerCase().includes(q)) ||
+          (p.powerWatts && String(p.powerWatts).toLowerCase().includes(q)) ||
           (p.inletOutletSize && p.inletOutletSize.toLowerCase().includes(q)) ||
           (p.cableLength && p.cableLength.toLowerCase().includes(q)) ||
           p.specs.some(s => s.toLowerCase().includes(q))
@@ -262,7 +346,7 @@ export default function CategoryPage({
     }
 
     return list;
-  }, [activeCategory, selectedSubcat, categoryProducts, modelSearch, selectedPhase, selectedHpRange]);
+  }, [activeCategory, selectedSubcat, nextGenGroup, categoryProducts, modelSearch, selectedPhase, selectedHpRange]);
 
   const hpOptions = useMemo(() => {
     if (activeCategory === 'tiny') {
@@ -350,10 +434,49 @@ export default function CategoryPage({
     );
   }
 
-  // Next Gen Main Category Page: show the 3 major groups and 20 subcategory cards
+  // NEXT GEN Main Category Page: show all 20 subcategory cards in one continuous, unified grid
   if (activeCategory === 'next-gen' && selectedSubcat === 'All') {
     return (
       <NextGenCatalogOverview
+        subcategories={currentCategoryObj?.subcategories || []}
+        products={categoryProducts}
+        onSelectSubcategory={(subcat) => handleSelectSubcategory(subcat)}
+        onBackToHome={onBackToHome}
+        onViewAllModels={() => handleSelectSubcategory('All-Models')}
+      />
+    );
+  }
+
+  // Residential Main Category Page: show all 11 subcategory cards in one continuous, unified grid
+  if (activeCategory === 'residential' && selectedSubcat === 'All') {
+    return (
+      <ResidentialCatalogOverview
+        subcategories={currentCategoryObj?.subcategories || []}
+        products={categoryProducts}
+        onSelectSubcategory={(subcat) => handleSelectSubcategory(subcat)}
+        onBackToHome={onBackToHome}
+        onViewAllModels={() => handleSelectSubcategory('All-Models')}
+      />
+    );
+  }
+
+  // Agri Main Category Page: show all 21 subcategory cards in one continuous, unified grid
+  if (activeCategory === 'agri' && selectedSubcat === 'All') {
+    return (
+      <AgriCatalogOverview
+        subcategories={currentCategoryObj?.subcategories || []}
+        products={categoryProducts}
+        onSelectSubcategory={(subcat) => handleSelectSubcategory(subcat)}
+        onBackToHome={onBackToHome}
+        onViewAllModels={() => handleSelectSubcategory('All-Models')}
+      />
+    );
+  }
+
+  // Accessories Main Category Page: show all 5 subcategory cards in one continuous, unified grid
+  if (activeCategory === 'accessories' && selectedSubcat === 'All') {
+    return (
+      <AccessoriesCatalogOverview
         subcategories={currentCategoryObj?.subcategories || []}
         products={categoryProducts}
         onSelectSubcategory={(subcat) => handleSelectSubcategory(subcat)}
@@ -390,10 +513,35 @@ export default function CategoryPage({
               </button>
             ) : activeCategory === 'next-gen' ? (
               <button
-                onClick={() => handleSelectSubcategory('All')}
+                onClick={() => {
+                  setSelectedSubcat('All');
+                  setNextGenGroup('All');
+                  if (onCategoryChange) onCategoryChange('next-gen', 'All');
+                }}
                 className="text-gray-800 hover:text-blue-700 font-bold hover:underline cursor-pointer"
               >
                 NEXT GEN
+              </button>
+            ) : activeCategory === 'residential' ? (
+              <button
+                onClick={() => handleSelectSubcategory('All')}
+                className="text-gray-800 hover:text-blue-700 font-bold hover:underline cursor-pointer"
+              >
+                Residential
+              </button>
+            ) : activeCategory === 'agri' ? (
+              <button
+                onClick={() => handleSelectSubcategory('All')}
+                className="text-gray-800 hover:text-blue-700 font-bold hover:underline cursor-pointer"
+              >
+                Agri
+              </button>
+            ) : activeCategory === 'accessories' ? (
+              <button
+                onClick={() => handleSelectSubcategory('All')}
+                className="text-gray-800 hover:text-blue-700 font-bold hover:underline cursor-pointer"
+              >
+                Accessories
               </button>
             ) : (
               <span className="text-gray-900 font-bold">
@@ -418,15 +566,15 @@ export default function CategoryPage({
 
       {/* 2. PRODUCT LISTING & FILTER TOOLBAR */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pt-5 pb-8">
-        {/* Back Button for Tiny & Next Gen Subcategory Pages */}
-        {(activeCategory === 'tiny' || activeCategory === 'next-gen') && selectedSubcat !== 'All' && (
+        {/* Back Button for Tiny, Next Gen, Residential, Agri & Accessories Subcategory Pages */}
+        {(activeCategory === 'tiny' || activeCategory === 'next-gen' || activeCategory === 'residential' || activeCategory === 'agri' || activeCategory === 'accessories') && selectedSubcat !== 'All' && (
           <div className="mb-3.5 flex flex-wrap items-center justify-between gap-2">
             <button
               onClick={() => handleSelectSubcategory('All')}
               className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-800 font-bold text-xs transition-colors border border-blue-200 shadow-2xs cursor-pointer group"
             >
               <span className="transition-transform group-hover:-translate-x-1">←</span>
-              <span>Back to {activeCategory === 'next-gen' ? 'NEXT GEN' : 'Tiny'} Subcategories</span>
+              <span>Back to {activeCategory === 'next-gen' ? 'NEXT GEN Subcategories' : activeCategory === 'residential' ? 'Residential Subcategories' : activeCategory === 'agri' ? 'Agri Subcategories' : activeCategory === 'accessories' ? 'Accessories Subcategories' : 'Tiny Subcategories'}</span>
             </button>
 
             <span className="text-xs text-gray-500 font-medium">
@@ -446,16 +594,30 @@ export default function CategoryPage({
                   ? (tinySubcategoriesMeta[selectedSubcat]?.icon || '⚡')
                   : activeCategory === 'next-gen'
                   ? (nextGenSubcategoriesMeta[selectedSubcat]?.icon || '🚀')
+                  : activeCategory === 'residential'
+                  ? (residentialSubcategoriesMeta[selectedSubcat]?.icon || '🏠')
+                  : activeCategory === 'agri'
+                  ? (agriSubcategoriesMeta[selectedSubcat]?.icon || '🌾')
+                  : activeCategory === 'accessories'
+                  ? (accessoriesSubcategoriesMeta[selectedSubcat]?.icon || '🔧')
                   : currentCategoryObj?.icon || '📦'}
               </span>
               <span>
                 {activeCategory === 'tiny' && selectedSubcat !== 'All'
                   ? `C.R.I. ${selectedSubcat === 'All-Models' ? 'Tiny All Models' : selectedSubcat}`
                   : activeCategory === 'next-gen' && selectedSubcat !== 'All'
-                  ? `C.R.I. ${selectedSubcat === 'All-Models' ? 'NEXT GEN All Models' : selectedSubcat}`
+                  ? `C.R.I. ${nextGenSubcategoryShortLabels[selectedSubcat] || selectedSubcat}`
+                  : activeCategory === 'next-gen' && nextGenGroup !== 'All'
+                  ? `C.R.I. ${nextGenGroup}`
+                  : activeCategory === 'residential' && selectedSubcat !== 'All'
+                  ? `C.R.I. ${selectedSubcat === 'All-Models' ? 'Residential All Models' : selectedSubcat}`
+                  : activeCategory === 'agri' && selectedSubcat !== 'All'
+                  ? `C.R.I. ${selectedSubcat === 'All-Models' ? 'Agri All Models' : selectedSubcat}`
+                  : activeCategory === 'accessories' && selectedSubcat !== 'All'
+                  ? `C.R.I. ${selectedSubcat === 'All-Models' ? 'Accessories All Models' : selectedSubcat}`
                   : `C.R.I. ${activeCategory === 'all' ? 'All Products' : currentCategoryObj?.name} Pumping Systems`}
               </span>
-              {activeCategory !== 'tiny' && activeCategory !== 'next-gen' && selectedSubcat !== 'All' && (
+              {activeCategory !== 'tiny' && activeCategory !== 'next-gen' && activeCategory !== 'residential' && activeCategory !== 'agri' && activeCategory !== 'accessories' && selectedSubcat !== 'All' && (
                 <span className="text-xs font-normal text-gray-500">
                   — {selectedSubcat}
                 </span>
@@ -466,6 +628,14 @@ export default function CategoryPage({
                 ? `${tinySubcategoriesMeta[selectedSubcat].tag} • ${tinySubcategoriesMeta[selectedSubcat].description}`
                 : activeCategory === 'next-gen' && nextGenSubcategoriesMeta[selectedSubcat]
                 ? `${nextGenSubcategoriesMeta[selectedSubcat].group} • ${nextGenSubcategoriesMeta[selectedSubcat].tag} • ${nextGenSubcategoriesMeta[selectedSubcat].description}`
+                : activeCategory === 'residential' && residentialSubcategoriesMeta[selectedSubcat]
+                ? `${residentialSubcategoriesMeta[selectedSubcat].tag} • ${residentialSubcategoriesMeta[selectedSubcat].description}`
+                : activeCategory === 'agri' && agriSubcategoriesMeta[selectedSubcat]
+                ? `${agriSubcategoriesMeta[selectedSubcat].tag} • ${agriSubcategoriesMeta[selectedSubcat].description}`
+                : activeCategory === 'accessories' && accessoriesSubcategoriesMeta[selectedSubcat]
+                ? `${accessoriesSubcategoriesMeta[selectedSubcat].tag} • ${accessoriesSubcategoriesMeta[selectedSubcat].description}`
+                : activeCategory === 'next-gen' && nextGenGroup !== 'All'
+                ? `Official C.R.I. ${nextGenGroup} Series • 100% Genuine C.R.I. Factory Warranty`
                 : 'Official C.R.I. Price Catalogue (Tamil Nadu) • 100% Genuine C.R.I. Factory Warranty'}
             </p>
           </div>
@@ -479,14 +649,103 @@ export default function CategoryPage({
                 onClick={() => handleSelectSubcategory('All')}
                 className="text-xs text-blue-700 hover:text-blue-900 font-semibold underline cursor-pointer ml-1"
               >
-                {activeCategory === 'tiny' || activeCategory === 'next-gen' ? 'All Subcategories' : 'Reset to All'}
+                {activeCategory === 'tiny' || activeCategory === 'next-gen' || activeCategory === 'residential' || activeCategory === 'agri' ? 'All Models' : 'Reset to All'}
               </button>
             )}
           </div>
         </div>
 
-        {/* SUBCATEGORY PILL CHIPS (CLEAN & HORIZONTAL ON CATALOG PAGE) */}
-        {tier2Subcategories.length > 0 && (
+        {/* SUBCATEGORY NAVIGATION BAR */}
+        {activeCategory === 'next-gen' ? (
+          <div className="bg-slate-50/90 rounded-2xl border border-gray-200/90 p-3 sm:p-4 mb-5 shadow-2xs flex flex-col gap-2.5">
+            {/* 1. Compact Group Filter Tabs */}
+            <div className="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap pb-1 scrollbar-none touch-pan-x">
+              <span className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider mr-1 shrink-0">
+                Group:
+              </span>
+              {NEXT_GEN_GROUPS.map(grp => {
+                const count = nextGenGroupCounts[grp.id] || 0;
+                const isGroupActive = nextGenGroup === grp.id;
+
+                return (
+                  <button
+                    key={grp.id}
+                    onClick={() => handleSelectNextGenGroup(grp.id)}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer flex items-center gap-1.5 border ${
+                      isGroupActive
+                        ? 'bg-blue-700 text-white border-blue-700 shadow-xs'
+                        : 'bg-white text-gray-700 hover:bg-gray-100 border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <span>{grp.icon}</span>
+                    <span>{grp.shortName}</span>
+                    <span
+                      className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                        isGroupActive ? 'bg-white/25 text-white' : 'bg-gray-100 text-gray-600'
+                      }`}
+                    >
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* 2. Compact Subcategory Chips for Active Group */}
+            <div className="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap pt-2 border-t border-gray-200/70 scrollbar-none touch-pan-x">
+              <span className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider mr-1 shrink-0">
+                Subcategory:
+              </span>
+              {/* 'All in Group' chip */}
+              <button
+                onClick={() => setSelectedSubcat('All')}
+                className={`px-3 py-1 rounded-full text-xs font-semibold transition-all shrink-0 cursor-pointer flex items-center gap-1.5 border ${
+                  selectedSubcat === 'All'
+                    ? 'bg-sky-800 text-white border-sky-800 shadow-2xs font-bold'
+                    : 'bg-white text-gray-700 hover:bg-gray-100 border-gray-200'
+                }`}
+              >
+                <span>All {nextGenGroup === 'All' ? 'Next Gen Models' : NEXT_GEN_GROUPS.find(g => g.id === nextGenGroup)?.shortName || 'Group Models'}</span>
+                <span
+                  className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                    selectedSubcat === 'All' ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-600'
+                  }`}
+                >
+                  {nextGenGroup === 'All' ? categoryProducts.length : nextGenGroupCounts[nextGenGroup] || 0}
+                </span>
+              </button>
+
+              {/* Subcategories chips */}
+              {displayedNextGenSubcategories.map(sub => {
+                const isSelected = selectedSubcat === sub;
+                const count = subcatCounts[sub] || 0;
+                const shortLabel = nextGenSubcategoryShortLabels[sub] || sub;
+
+                return (
+                  <button
+                    key={sub}
+                    onClick={() => handleSelectSubcategory(sub)}
+                    title={sub}
+                    className={`px-3 py-1 rounded-full text-xs font-semibold transition-all shrink-0 cursor-pointer flex items-center gap-1.5 border ${
+                      isSelected
+                        ? 'bg-blue-700 text-white border-blue-700 shadow-2xs font-bold'
+                        : 'bg-white text-gray-700 hover:bg-gray-100 border-gray-200'
+                    }`}
+                  >
+                    <span>{shortLabel}</span>
+                    <span
+                      className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                        isSelected ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-600'
+                      }`}
+                    >
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ) : tier2Subcategories.length > 0 ? (
           <div className="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap pb-2 mb-4 sm:mb-5 scrollbar-none touch-pan-x">
             {activeCategory === 'tiny' ? (
               <button
@@ -496,13 +755,29 @@ export default function CategoryPage({
                 <span>←</span>
                 <span>14 Subcategories</span>
               </button>
-            ) : activeCategory === 'next-gen' ? (
+            ) : activeCategory === 'residential' ? (
               <button
                 onClick={() => handleSelectSubcategory('All')}
                 className="px-3 py-1 rounded-full text-xs font-bold transition-all shrink-0 cursor-pointer bg-slate-100 hover:bg-slate-200 text-gray-800 border border-gray-300 flex items-center gap-1 shadow-2xs"
               >
                 <span>←</span>
-                <span>20 Subcategories</span>
+                <span>11 Subcategories</span>
+              </button>
+            ) : activeCategory === 'agri' ? (
+              <button
+                onClick={() => handleSelectSubcategory('All')}
+                className="px-3 py-1 rounded-full text-xs font-bold transition-all shrink-0 cursor-pointer bg-slate-100 hover:bg-slate-200 text-gray-800 border border-gray-300 flex items-center gap-1 shadow-2xs"
+              >
+                <span>←</span>
+                <span>21 Subcategories</span>
+              </button>
+            ) : activeCategory === 'accessories' ? (
+              <button
+                onClick={() => handleSelectSubcategory('All')}
+                className="px-3 py-1 rounded-full text-xs font-bold transition-all shrink-0 cursor-pointer bg-slate-100 hover:bg-slate-200 text-gray-800 border border-gray-300 flex items-center gap-1 shadow-2xs"
+              >
+                <span>←</span>
+                <span>5 Subcategories</span>
               </button>
             ) : (
               <button
@@ -541,7 +816,7 @@ export default function CategoryPage({
               );
             })}
           </div>
-        )}
+        ) : null}
 
         {/* CONTROLS BAR: SEARCH, PHASE, HP, VIEW MODE, SORT - Hidden on Tiny models page */}
         {activeCategory !== 'tiny' && (
@@ -675,6 +950,7 @@ export default function CategoryPage({
                 setSelectedPhase('All');
                 setSelectedHpRange('All');
                 setSelectedSubcat('All');
+                setNextGenGroup('All');
               }}
               className="mt-3 px-3.5 py-1.5 bg-blue-700 text-white rounded-lg text-xs font-semibold hover:bg-blue-800 cursor-pointer shadow-xs"
             >
@@ -684,6 +960,8 @@ export default function CategoryPage({
         ) : viewMode === 'table' ? (
           /* Official Model & List Price Table View */
           (() => {
+            const isAccessoriesCat = activeCategory === 'accessories';
+            const isValve = selectedSubcat.includes('Valve') || paginated.some(p => Boolean(p.valveType));
             const isJtsCtss = selectedSubcat.includes('JTS') || selectedSubcat.includes('CTSS');
             const isApc = selectedSubcat === 'Automatic Pump Controller';
             const isCirculatory = selectedSubcat === 'Mini Circulatory Pumps';
@@ -697,11 +975,13 @@ export default function CategoryPage({
             const showPowerWatts = isCirculatory || paginated.some(p => Boolean(p.powerWatts));
             const showInletOutlet = isCirculatory || paginated.some(p => Boolean(p.inletOutletSize));
             const showCableLength = isFloatSwitch || paginated.some(p => Boolean(p.cableLength));
-            const showHp = !isApc && !isFloatSwitch && !isCirculatory;
-            const showPipe = !isApc && !isFloatSwitch && !isCirculatory;
-            const showType = !isApc && !isFloatSwitch && !isCirculatory;
-            const showHeadDischarge = !isApc && !isFloatSwitch && !isCirculatory && !isJtsCtss;
-            const showRcp = activeCategory === 'next-gen' || paginated.some(p => Boolean(p.rcp));
+            const showValveType = isAccessoriesCat && isValve;
+            const showRelay = isAccessoriesCat && !isValve;
+            const showHp = !isApc && !isFloatSwitch && !isCirculatory && !isValve;
+            const showPipe = !isApc && !isFloatSwitch && !isCirculatory && (!isAccessoriesCat || isValve);
+            const showType = !isApc && !isFloatSwitch && !isCirculatory && !isValve;
+            const showHeadDischarge = !isApc && !isFloatSwitch && !isCirculatory && !isJtsCtss && !isAccessoriesCat;
+            const showRcp = activeCategory === 'next-gen' || activeCategory === 'accessories' || paginated.some(p => Boolean(p.rcp));
 
             return (
               <div className="bg-white rounded-xl border border-gray-200 shadow-xs overflow-hidden mb-6">
@@ -727,10 +1007,12 @@ export default function CategoryPage({
                         <th className="py-3 px-3 whitespace-nowrap">Model</th>
                         {showHp && (
                           <th className="py-3 px-2.5 whitespace-nowrap">
-                            {showStageTank ? 'HP / Stage / Tank' : 'HP'}
+                            {isAccessoriesCat ? 'Recommended HP' : showStageTank ? 'HP / Stage / Tank' : 'HP'}
                           </th>
                         )}
-                        {showPipe && <th className="py-3 px-2.5 whitespace-nowrap">Pipe Size (mm)</th>}
+                        {showRelay && <th className="py-3 px-2.5 whitespace-nowrap">Relay Range</th>}
+                        {showValveType && <th className="py-3 px-2.5 whitespace-nowrap">Valve Type</th>}
+                        {showPipe && <th className="py-3 px-2.5 whitespace-nowrap">{isAccessoriesCat ? 'Size (mm)' : 'Pipe Size (mm)'}</th>}
                         {showType && <th className="py-3 px-2.5 whitespace-nowrap">Type / Phase</th>}
                         {showPowerWatts && <th className="py-3 px-2.5 whitespace-nowrap">Power (Watts)</th>}
                         {showInletOutlet && <th className="py-3 px-2.5 whitespace-nowrap">Inlet & Outlet (mm)</th>}
@@ -774,11 +1056,21 @@ export default function CategoryPage({
                           </td>
                           {showHp && (
                             <td className="py-2.5 px-2.5 text-gray-800 whitespace-nowrap font-medium">
-                              {showStageTank ? (p.stageTank || p.hp || '-') : (p.hp || '-')}
+                              {p.recommendedHp || (showStageTank ? (p.stageTank || p.hp || '-') : (p.hp || '-'))}
+                            </td>
+                          )}
+                          {showRelay && (
+                            <td className="py-2.5 px-2.5 text-gray-700 whitespace-nowrap font-medium">
+                              {p.relayRange || '-'}
+                            </td>
+                          )}
+                          {showValveType && (
+                            <td className="py-2.5 px-2.5 text-gray-700 whitespace-nowrap font-medium">
+                              {p.valveType || '-'}
                             </td>
                           )}
                           {showPipe && (
-                            <td className="py-2.5 px-2.5 text-gray-600 whitespace-nowrap">{p.pipeSize || '-'}</td>
+                            <td className="py-2.5 px-2.5 text-gray-600 whitespace-nowrap">{p.sizeMm || p.pipeSize || '-'}</td>
                           )}
                           {showType && (
                             <td className="py-2.5 px-2.5 text-gray-600 whitespace-nowrap">{p.phase || '-'}</td>
@@ -842,9 +1134,9 @@ export default function CategoryPage({
         ) : (
           /* Cards Grid View */
           <div
-            className={`grid gap-3 sm:gap-4 md:gap-5 mb-6 ${
-              activeCategory === 'tiny'
-                ? 'grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4'
+            className={`grid gap-3.5 sm:gap-4 md:gap-5 mb-6 ${
+              activeCategory === 'tiny' || activeCategory === 'next-gen' || activeCategory === 'residential' || activeCategory === 'agri' || activeCategory === 'accessories'
+                ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
                 : 'grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-6'
             }`}
           >

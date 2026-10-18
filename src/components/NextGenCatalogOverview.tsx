@@ -11,10 +11,10 @@ interface NextGenCatalogOverviewProps {
 }
 
 const GROUPS = [
-  'All Groups',
-  'JTS / CTSS Series',
-  'Booster Pumps',
-  'Submersible and Surface Sewage / Drainage Pumps',
+  { id: 'All Groups', label: 'All Subcategories' },
+  { id: 'JTS / CTSS Series', label: 'JTS / CTSS' },
+  { id: 'Booster Pumps', label: 'Booster Pumps' },
+  { id: 'Submersible and Surface Sewage / Drainage Pumps', label: 'Sewage & Drainage' },
 ] as const;
 
 export default function NextGenCatalogOverview({
@@ -81,46 +81,6 @@ export default function NextGenCatalogOverview({
     });
   }, [subcategoryCardsData, activeGroup, searchQuery]);
 
-  // Grouped cards for structured display
-  const groupedCards = useMemo(() => {
-    const map: Record<string, typeof filteredCards> = {
-      'JTS / CTSS Series': [],
-      'Booster Pumps': [],
-      'Submersible and Surface Sewage / Drainage Pumps': [],
-    };
-
-    filteredCards.forEach(card => {
-      if (map[card.group]) {
-        map[card.group].push(card);
-      } else {
-        map['Booster Pumps'].push(card);
-      }
-    });
-
-    return map;
-  }, [filteredCards]);
-
-  const groupBadges = {
-    'JTS / CTSS Series': {
-      title: 'A. JTS / CTSS Series',
-      subtitle: 'Stainless Steel Monoblock Pumpsets Special Application',
-      icon: '🛡️',
-      color: 'from-blue-700 to-indigo-800',
-    },
-    'Booster Pumps': {
-      title: 'B. Booster Pumps & Systems',
-      subtitle: 'Hydro-Pneumatic, Smart Inverter & Circulation Solutions',
-      icon: '⚡',
-      color: 'from-indigo-700 to-purple-800',
-    },
-    'Submersible and Surface Sewage / Drainage Pumps': {
-      title: 'C. Submersible & Surface Sewage / Drainage Pumps',
-      subtitle: 'Heavy-Duty Effluent, Vortex, Cutter & Central Delivery Pumps',
-      icon: '🌊',
-      color: 'from-sky-700 to-cyan-800',
-    },
-  };
-
   return (
     <div className="w-full">
       {/* 1. TOP BREADCRUMB & DEALER BANNER */}
@@ -162,14 +122,11 @@ export default function NextGenCatalogOverview({
               C.R.I. NEXT GEN Pumping Systems
             </h1>
             <p className="text-indigo-100 text-xs sm:text-sm md:text-base leading-relaxed">
-              Explore the 3 major groups and 20 specialized subcategories under C.R.I. NEXT GEN. From stainless steel chemical monoblocks and hydro-pneumatic boosters to heavy sewage cutter pumpsets.
+              Explore all 20 specialized subcategories under C.R.I. NEXT GEN in one continuous catalogue. From stainless steel chemical monoblocks and hydro-pneumatic boosters to heavy sewage cutter pumpsets.
             </p>
 
             {/* Quick stats pills */}
             <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 mt-4 sm:mt-5 text-[11px] sm:text-xs font-semibold">
-              <span className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-white/10 backdrop-blur-xs text-white border border-white/20">
-                3 Major Groups
-              </span>
               <span className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-white/10 backdrop-blur-xs text-white border border-white/20">
                 20 Subcategories
               </span>
@@ -185,26 +142,26 @@ export default function NextGenCatalogOverview({
 
         {/* 3. GROUP TABS & SEARCH CONTROLS */}
         <div className="flex flex-col gap-3 mb-6 bg-slate-50 p-3 sm:p-4 rounded-xl border border-gray-200 shadow-2xs">
-          {/* Major Groups Navigation Pills */}
+          {/* Quick Filter Navigation Pills */}
           <div className="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap pb-1 scrollbar-none">
             {GROUPS.map(grp => {
               const count =
-                grp === 'All Groups'
+                grp.id === 'All Groups'
                   ? subcategoryCardsData.length
-                  : subcategoryCardsData.filter(c => c.group === grp).length;
-              const isSelected = activeGroup === grp;
+                  : subcategoryCardsData.filter(c => c.group === grp.id).length;
+              const isSelected = activeGroup === grp.id;
 
               return (
                 <button
-                  key={grp}
-                  onClick={() => setActiveGroup(grp)}
+                  key={grp.id}
+                  onClick={() => setActiveGroup(grp.id)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
                     isSelected
                       ? 'bg-blue-700 text-white shadow-xs'
                       : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
                   }`}
                 >
-                  <span>{grp}</span>
+                  <span>{grp.label}</span>
                   <span
                     className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
                       isSelected ? 'bg-white/25 text-white' : 'bg-gray-100 text-gray-600'
@@ -256,7 +213,8 @@ export default function NextGenCatalogOverview({
           </div>
         </div>
 
-        {/* 4. SUBCATEGORY CARDS ORGANIZED BY GROUP */}
+
+        {/* 4. SUBCATEGORY CARDS GRID */}
         {filteredCards.length === 0 ? (
           <div className="text-center py-16 bg-white rounded-xl border border-gray-200 shadow-2xs">
             <div className="text-4xl mb-2">🔍</div>
@@ -273,104 +231,76 @@ export default function NextGenCatalogOverview({
             </button>
           </div>
         ) : (
-          <div className="space-y-8 sm:space-y-10">
-            {Object.entries(groupedCards).map(([groupName, cards]) => {
-              if (cards.length === 0) return null;
-              const badgeInfo = groupBadges[groupName as keyof typeof groupBadges];
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5 sm:gap-5">
+            {filteredCards.map(item => {
+              const { name, meta, modelCount, minPrice } = item;
 
               return (
-                <div key={groupName} className="space-y-4">
-                  {/* Group Header */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 pb-2 border-b-2 border-blue-600">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xl">{badgeInfo.icon}</span>
-                      <div>
-                        <h2 className="text-sm sm:text-base font-extrabold text-gray-900 tracking-tight">
-                          {badgeInfo.title}
-                        </h2>
-                        <p className="text-[11px] text-gray-500">{badgeInfo.subtitle}</p>
-                      </div>
-                    </div>
-                    <span className="text-xs font-bold text-blue-800 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200 self-start sm:self-auto">
-                      {cards.length} {cards.length === 1 ? 'Subcategory' : 'Subcategories'}
+                <div
+                  key={name}
+                  onClick={() => onSelectSubcategory(name)}
+                  className="group relative flex flex-col justify-between h-full bg-white rounded-2xl border-2 border-gray-200/90 hover:border-blue-600 shadow-xs hover:shadow-xl transition-all duration-300 p-4 sm:p-5 cursor-pointer overflow-hidden transform hover:-translate-y-1"
+                >
+                  {/* Top accent badge */}
+                  <div className="flex items-start justify-between gap-2 mb-3">
+                    <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-100 text-blue-700 flex items-center justify-center text-xl shadow-2xs group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                      {meta.icon}
+                    </span>
+                    <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-50 text-blue-800 border border-blue-200 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                      {modelCount} {modelCount === 1 ? 'Model' : 'Models'}
                     </span>
                   </div>
 
-                  {/* Subcategory Cards Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5 sm:gap-5">
-                    {cards.map(item => {
-                      const { name, meta, modelCount, minPrice } = item;
+                  {/* Dark-Blue Subcategory Heading */}
+                  <div className="flex-1 flex flex-col">
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-sky-800 bg-sky-50 px-2 py-0.5 rounded-md inline-block mb-1.5 self-start">
+                      {meta.tag}
+                    </span>
+                    <h3 className="text-base sm:text-lg font-extrabold text-gray-900 group-hover:text-blue-700 transition-colors leading-snug">
+                      {name}
+                    </h3>
+                    <p className="text-xs text-gray-500 mt-1.5 line-clamp-2 leading-relaxed">
+                      {meta.description}
+                    </p>
+                  </div>
 
-                      return (
-                        <div
-                          key={name}
-                          onClick={() => onSelectSubcategory(name)}
-                          className="group relative flex flex-col justify-between bg-white rounded-2xl border-2 border-gray-200/90 hover:border-blue-600 shadow-xs hover:shadow-xl transition-all duration-300 p-4 sm:p-5 cursor-pointer overflow-hidden transform hover:-translate-y-1"
-                        >
-                          {/* Top accent badge */}
-                          <div className="flex items-start justify-between gap-2 mb-3">
-                            <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-100 text-blue-700 flex items-center justify-center text-xl shadow-2xs group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all">
-                              {meta.icon}
-                            </span>
-                            <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-50 text-blue-800 border border-blue-200 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                              {modelCount} {modelCount === 1 ? 'Model' : 'Models'}
-                            </span>
-                          </div>
+                  {/* Specs & Pricing Details */}
+                  <div className="mt-4 pt-3.5 border-t border-gray-100 flex flex-col gap-2 text-xs">
+                    <div className="flex items-center justify-between text-gray-600 text-[11px]">
+                      <span className="text-gray-400 font-medium">Power / Specs:</span>
+                      <span className="font-bold text-gray-800 truncate max-w-[140px] text-right">{meta.hpRange}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-gray-600 text-[11px]">
+                      <span className="text-gray-400 font-medium">Pipe / Ports:</span>
+                      <span className="font-semibold text-gray-800">{meta.pipeRange}</span>
+                    </div>
 
-                          {/* Dark-Blue Subcategory Heading */}
-                          <div>
-                            <span className="text-[10px] font-extrabold uppercase tracking-wider text-sky-800 bg-sky-50 px-2 py-0.5 rounded-md inline-block mb-1.5">
-                              {meta.tag}
-                            </span>
-                            <h3 className="text-base sm:text-lg font-extrabold text-gray-900 group-hover:text-blue-700 transition-colors leading-snug">
-                              {name}
-                            </h3>
-                            <p className="text-xs text-gray-500 mt-1.5 line-clamp-2 leading-relaxed">
-                              {meta.description}
-                            </p>
-                          </div>
+                    <div className="mt-1 flex items-baseline justify-between pt-2 border-t border-slate-100">
+                      <div>
+                        <span className="text-[10px] uppercase font-bold tracking-wider text-gray-400 block">
+                          Starting List Price
+                        </span>
+                        <span className="text-sm font-extrabold text-blue-900">
+                          ₹{minPrice.toLocaleString('en-IN')}
+                        </span>
+                      </div>
+                      <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                        Official C.R.I.
+                      </span>
+                    </div>
 
-                          {/* Specs & Pricing Details */}
-                          <div className="mt-4 pt-3.5 border-t border-gray-100 flex flex-col gap-2 text-xs">
-                            <div className="flex items-center justify-between text-gray-600 text-[11px]">
-                              <span className="text-gray-400 font-medium">Power / Specs:</span>
-                              <span className="font-bold text-gray-800 truncate max-w-[140px] text-right">{meta.hpRange}</span>
-                            </div>
-                            <div className="flex items-center justify-between text-gray-600 text-[11px]">
-                              <span className="text-gray-400 font-medium">Pipe / Ports:</span>
-                              <span className="font-semibold text-gray-800">{meta.pipeRange}</span>
-                            </div>
-
-                            <div className="mt-1 flex items-baseline justify-between pt-2 border-t border-slate-100">
-                              <div>
-                                <span className="text-[10px] uppercase font-bold tracking-wider text-gray-400 block">
-                                  Starting List Price
-                                </span>
-                                <span className="text-sm font-extrabold text-blue-900">
-                                  ₹{minPrice.toLocaleString('en-IN')}
-                                </span>
-                              </div>
-                              <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                                Official C.R.I.
-                              </span>
-                            </div>
-
-                            {/* Explore CTA Button */}
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onSelectSubcategory(name);
-                              }}
-                              className="mt-2 w-full py-2 px-3 rounded-xl bg-slate-100 group-hover:bg-blue-700 text-gray-800 group-hover:text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-2xs"
-                            >
-                              <span>View Models</span>
-                              <span className="transition-transform group-hover:translate-x-1">→</span>
-                            </button>
-                          </div>
-                        </div>
-                      );
-                    })}
+                    {/* Explore CTA Button */}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onSelectSubcategory(name);
+                      }}
+                      className="mt-2 w-full py-2 px-3 rounded-xl bg-slate-100 group-hover:bg-blue-700 text-gray-800 group-hover:text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-2xs cursor-pointer"
+                    >
+                      <span>View Models</span>
+                      <span className="transition-transform group-hover:translate-x-1">→</span>
+                    </button>
                   </div>
                 </div>
               );
