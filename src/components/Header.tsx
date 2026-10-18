@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { SearchIcon, CartIcon, HeartIcon, UserIcon, GlobeIcon, ChevronDownIcon, MenuIcon, CloseIcon, LogoutIcon } from './icons';
+import { SearchIcon, CartIcon, HeartIcon, UserIcon, GlobeIcon, ChevronDownIcon, MenuIcon, CloseIcon, LogoutIcon, HomeIcon } from './icons';
 import { categories } from '../data';
 import { UserProfile } from './AuthModal';
 import AwardBanner from './AwardBanner';
+import { hebronLogo, criLogo } from '../assets/logoData';
 
 interface HeaderProps {
   currentPage?: string;
@@ -49,12 +50,21 @@ export default function Header({
 
   return (
     <>
-      {/* 1. TOPMOST BLUE PART: ONLY "HEBRON ENTERPRISES — AUTHORISED DEALER" (SCROLLS NORMALLY) */}
-      <div className="bg-[#0284c7] text-white border-b border-sky-600 py-3 sm:py-3.5 px-4 text-center shadow-md">
-        <div className="max-w-7xl mx-auto flex items-center justify-center gap-2">
-          <span className="text-amber-300 text-sm sm:text-lg lg:text-xl font-black tracking-widest uppercase font-sans drop-shadow-xs">
-            HEBRON ENTERPRISES — AUTHORISED DEALER
-          </span>
+      {/* 1. TOPMOST BANNER: HEBRON ENTERPRISE - AUTHORIZED DEALER */}
+      <div className="w-full bg-blue-700 sm:bg-blue-800 border-b-2 border-blue-900 py-3 sm:py-4 px-3 sm:px-4 text-center shadow-md">
+        <div className="max-w-7xl mx-auto flex items-center justify-center">
+          <div
+            className="inline-flex items-center justify-center gap-2.5 sm:gap-3.5 text-red-500 font-black text-sm sm:text-xl md:text-2xl lg:text-3xl tracking-wider sm:tracking-widest uppercase"
+            style={{
+              fontWeight: 900,
+              WebkitTextStroke: '0.5px currentColor',
+              textShadow: '0 2px 4px rgba(0, 0, 0, 0.45)',
+            }}
+            title="Hebron® Enterprise — Authorized Dealer"
+          >
+            <img src={hebronLogo} alt="Hebron Logo" className="h-6 sm:h-8 md:h-9 lg:h-10 w-auto inline-block object-contain drop-shadow-sm" />
+            <span>HEBRON<sup className="text-[0.6em] font-bold align-super ml-0.5">®</sup> ENTERPRISE - AUTHORIZED DEALER</span>
+          </div>
         </div>
       </div>
 
@@ -77,13 +87,26 @@ export default function Header({
                 <span className="font-extrabold tracking-wide hidden sm:inline">View Categories</span>
               </button>
 
-              {/* C.R.I. PUMPS LOGO */}
-              <button onClick={onHome} className="flex flex-col items-start group focus:outline-none">
-                <img 
-                  src="https://www.crifluidsystems.com/za/wp-content/uploads/2021/02/cri-logo-new.png" 
-                  alt="C.R.I. Pumps Logo" 
-                  className="h-8 sm:h-11 w-auto object-contain transition-transform group-hover:scale-105"
-                />
+              {/* C.R.I. PUMPS LOGO + HOME ICON INDICATION */}
+              <button 
+                onClick={onHome} 
+                className="flex flex-col items-start group focus:outline-none cursor-pointer relative"
+                title="Return to Home Page"
+                aria-label="C.R.I. Pumps - Return to Home"
+              >
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <img 
+                    src={criLogo} 
+                    alt="C.R.I. Pumps Logo" 
+                    className="h-8 sm:h-11 w-auto object-contain transition-transform group-hover:scale-105"
+                  />
+                  <span 
+                    className="inline-flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-blue-600 text-white shadow-xs group-hover:bg-amber-400 group-hover:text-gray-950 transition-all border border-blue-700 group-hover:border-amber-400 group-hover:scale-110" 
+                    title="Return to Home"
+                  >
+                    <HomeIcon size={14} className="shrink-0" />
+                  </span>
+                </div>
                 <span className="text-[9px] sm:text-[10px] text-red-700 font-extrabold italic tracking-tight">
                   Pumping trust... Worldwide.
                 </span>
@@ -122,7 +145,7 @@ export default function Header({
               <div className="flex w-full rounded-xl overflow-hidden border-2 border-sky-500 focus-within:border-amber-400 transition-colors shadow-sm">
                 <input
                   type="text"
-                  placeholder="Search Hebron Enterprises for C.R.I. pumps, motors, pipes..."
+                  placeholder="Search Hebron® Enterprises for C.R.I. pumps, motors, pipes..."
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
                   className="flex-1 px-4 py-2 text-xs sm:text-sm outline-none bg-slate-50 text-gray-900 placeholder-gray-500 focus:bg-white transition-colors"
@@ -184,10 +207,13 @@ export default function Header({
             <div className="fixed inset-0 bg-black/40 z-40 md:hidden backdrop-blur-xs" onClick={() => setMobileMenuOpen(false)} />
             <div className="md:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-200 shadow-2xl z-50 max-h-[80vh] overflow-y-auto animate-fade-in">
               <div className="p-4 space-y-1">
-                <div className="bg-gradient-to-r from-amber-500 to-amber-400 p-3 rounded-xl text-gray-950 font-extrabold text-center mb-3 shadow-sm">
-                  <p className="text-sm tracking-wider uppercase">HEBRON ENTERPRISES</p>
-                  <p className="text-[10px] font-bold text-gray-900 tracking-widest uppercase mt-0.5">Authorised Main Dealer — C.R.I. Pumps</p>
-                </div>
+                  <div className="bg-gradient-to-r from-amber-500 to-amber-400 p-3 rounded-xl text-gray-950 font-extrabold flex flex-col items-center justify-center mb-3 shadow-sm">
+                     <div className="flex items-center gap-2 mb-1">
+                       <img src={hebronLogo} alt="Hebron Logo" className="h-6 w-auto object-contain" />
+                       <p className="text-sm tracking-wider uppercase font-black">HEBRON<sup className="text-[0.6em] font-bold align-super ml-0.5">®</sup> ENTERPRISES</p>
+                     </div>
+                     <p className="text-[10px] font-bold text-gray-900 tracking-widest uppercase mt-0.5 text-center">Authorised Main Dealer — C.R.I. Pumps</p>
+                   </div>
                 <div className="flex items-center justify-between pb-3 mb-2 border-b border-gray-100">
                   {user ? (
                     <div className="flex items-center gap-2">
@@ -388,10 +414,13 @@ export default function Header({
             </div>
 
             {/* Drawer Footer */}
-            <div className="p-3.5 bg-slate-100 border-t border-gray-200 text-center text-xs text-gray-600">
-              <p className="font-bold text-gray-900">Hebron Enterprises</p>
-              <p className="text-[11px] text-gray-500 mt-0.5">Authorised Main Dealer • 100% Factory Warranty</p>
-            </div>
+            <div className="p-3.5 bg-slate-100 border-t border-gray-200 flex items-center justify-center gap-2.5 text-center text-xs text-gray-600">
+               <img src={hebronLogo} alt="Hebron Logo" className="h-7 w-auto object-contain" />
+               <div className="text-left">
+                 <p className="font-bold text-gray-900">Hebron<sup className="text-[0.6em] font-bold align-super ml-0.5">®</sup> Enterprises</p>
+                 <p className="text-[11px] text-gray-500 mt-0.5">Authorised Main Dealer • 100% Factory Warranty</p>
+               </div>
+             </div>
           </aside>
         </>
       )}

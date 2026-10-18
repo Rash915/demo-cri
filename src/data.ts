@@ -60,6 +60,9 @@ export interface Testimonial {
   text: string;
   rating: number;
   avatar: string;
+  date?: string;
+  badge?: string;
+  isGoogleReview?: boolean;
 }
 
 export const categories: Category[] = [
@@ -67,7 +70,7 @@ export const categories: Category[] = [
     id: 'agri',
     name: 'Agri',
     icon: '🌾',
-    image: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=1200&h=600&fit=crop&auto=format',
+    image: categoryImages.agri,
     description: 'Complete verified C.R.I. Agricultural pump range from official Rate Contract Price List (Tamil Nadu). Featuring 3-Phase Monoblocks, Horizontal & Vertical Openwells, and 4", 5"/4", 6" Submersibles.',
     subcategories: [
       '3 Phase Monoblock Pumps – JUMBO',
@@ -98,7 +101,7 @@ export const categories: Category[] = [
     id: 'residential',
     name: 'Residential',
     icon: '🏠',
-    image: '/home_pump_category.png',
+    image: categoryImages.residential,
     description: 'High-performance residential domestic pumps for homes, apartments, and villas. Whisper-quiet, rust-resistant, and built for steady high water pressure.',
     subcategories: [
       '3″ Submersible Pumpset – Lena Series',
@@ -119,7 +122,7 @@ export const categories: Category[] = [
     id: 'tiny',
     name: 'Tiny',
     icon: '⚡',
-    image: 'https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=1200&h=600&fit=crop&auto=format',
+    image: categoryImages.tiny,
     description: 'C.R.I. Tiny series pumps are ultra-compact mini powerhouses engineered for tight spaces, household overhead tanks, gardens, and light utility.',
     subcategories: [
       'PLANO',
@@ -366,47 +369,56 @@ export const tinySubcategoriesMeta: Record<string, TinySubcategoryInfo> = {
 export const testimonials: Testimonial[] = [
   {
     id: 't1',
-    name: 'Rajesh Kumar',
-    location: 'Coimbatore, Tamil Nadu',
-    role: 'Farmer, 12 acres',
-    text: 'CRI submersible pumps have transformed my farming. Running non-stop for 3 years without a single breakdown. The JUMBO monoblock delivers high discharge with low power consumption.',
+    name: 'Naveen S',
+    role: '2 reviews',
+    date: '4 months ago',
+    location: 'Verified Google Review',
+    text: 'Excellent Self-Priming Pump! "We bought a C.R.I. self-priming pump for our home, and it works perfectly. It pulls water very quickly without needing any manual priming, operates with very little noise, and is highly energy-efficient. Highly recommend it for anyone needing a reliable household water pump!"',
     rating: 5,
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&auto=format',
+    avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop&auto=format',
+    isGoogleReview: true,
   },
   {
     id: 't2',
-    name: 'Priya Venkatesh',
-    location: 'Madurai, Tamil Nadu',
-    role: 'Home Owner',
-    text: 'The booster pump solved our low water pressure issues completely. Installation was easy, and the after-sales service from CRI was excellent. Highly recommend!',
+    name: 'Gowri Sankaralingam',
+    role: '5 reviews',
+    date: '3 months ago',
+    location: 'Verified Google Review',
+    text: 'Good quality motor from C.R.I Pumps. Running smoothly and efficiently. Thanks to Mr. Anandan for his excellent support. Very satisfied with the purchase.',
     rating: 5,
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&auto=format',
+    avatar: 'https://ui-avatars.com/api/?name=Gowri+Sankaralingam&background=0F9D58&color=fff&size=100&font-size=0.55&bold=true',
+    isGoogleReview: true,
   },
   {
     id: 't3',
-    name: 'Mohammed Shareef',
-    location: 'Tiruchirappalli, Tamil Nadu',
-    role: 'Irrigation Contractor',
-    text: "I've been installing CRI products for 15 years across Thanjavur and Trichy. The DELMA NXT mixed flow and RYKER openwells never fail. Truly top-tier engineering.",
+    name: 'Mohan Kumar Rangaraju',
+    role: '4 reviews',
+    date: '3 months ago',
+    location: 'CRI Customer Since 2008',
+    text: 'Superb performance. Bought in 2008. No problem for the past 18 years. And the staff also give excellent service.',
     rating: 5,
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&auto=format',
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&auto=format',
+    isGoogleReview: true,
   },
   {
     id: 't4',
-    name: 'Anitha Subramaniam',
-    location: 'Salem, Tamil Nadu',
-    role: 'Dairy Farm Owner',
-    text: 'The solar and agricultural pumps are outstanding. Continuous reliable water supply with genuine warranty support from Hebron Enterprises.',
-    rating: 4,
-    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&auto=format',
+    name: 'Prabu R',
+    role: 'Local Guide · 17 reviews · 20 photos',
+    badge: 'Local Guide',
+    date: '8 months ago',
+    location: 'Hebron® Enterprises Customer',
+    text: 'I had an outstanding experience with Hebron® Enterprises, the CRI dealer! Their team clearly explained every detail about the motor and pump options, taking the time to fully understand my specific requirements.',
+    rating: 5,
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&auto=format',
+    isGoogleReview: true,
   },
 ];
 
 export const stats = [
+  { label: 'Certified', value: 'ISI', icon: '🛡️' },
+  { label: '5-Star Rating', value: 'BEE', icon: '⭐' },
+  { label: '9001:2015', value: 'ISO', icon: '🏅' },
   { label: 'Happy Customers', value: '5M+', icon: '👥' },
-  { label: 'Dealer Network', value: '12,000+', icon: '🏪' },
-  { label: 'Countries Served', value: '40+', icon: '🌍' },
-  { label: 'Years of Excellence', value: '65+', icon: '🏆' },
 ];
 
 export const offers = [

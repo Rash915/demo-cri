@@ -1,3 +1,5 @@
+import { hebronLogo } from '../assets/logoData';
+
 const reasons = [
   {
     icon: '🏆',
@@ -39,9 +41,9 @@ export default function WhyCRI() {
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3" style={{ fontFamily: 'DM Serif Display, serif' }}>
             Why Choose CRI Pumps?
           </h2>
-          <p className="text-gray-600 max-w-xl mx-auto text-xs sm:text-sm font-medium">
-            At <strong>Hebron Enterprises</strong>, we deliver six decades of CRI engineering precision, customer trust, and 100% genuine guaranteed products.
-          </p>
+          <p className="text-gray-600 max-w-xl mx-auto text-xs sm:text-sm font-medium flex items-center justify-center flex-wrap gap-1.5">
+             At <span className="inline-flex items-center gap-1.5"><img src={hebronLogo} alt="Hebron Logo" className="h-4 w-auto inline-block object-contain" /><strong>Hebron<sup className="text-[0.6em] font-bold align-super ml-0.5">®</sup> Enterprises</strong></span>, we deliver six decades of CRI engineering precision, customer trust, and 100% genuine guaranteed products.
+           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">

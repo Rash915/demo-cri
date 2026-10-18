@@ -1,4 +1,5 @@
 node_modules/
+/.opencode-skills/node_modules/
 dist/
 build/
 .cache/
