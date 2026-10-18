@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { StarIcon, HeartIcon, CartIcon } from './icons';
 import { Product } from '../data';
 
@@ -9,6 +10,8 @@ interface ProductCardProps {
   onClick: (product: Product) => void;
 }
 
+const FALLBACK_PUMP_IMAGE = 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=500&h=500&fit=crop&auto=format';
+
 export default function ProductCard({
   product,
   isWishlisted,
@@ -16,13 +19,44 @@ export default function ProductCard({
   onToggleWishlist,
   onClick,
 }: ProductCardProps) {
+  const [imgError, setImgError] = useState(false);
   const isTiny = product.category === 'tiny';
+  const isNextGen = product.category === 'next-gen';
+  const isResidential = product.category === 'residential';
+  const isAgri = product.category === 'agri';
+  const isAccessories = product.category === 'accessories';
 
-  // Only calculate discount if not tiny and originalPrice is genuinely set
+  // Only calculate discount if not tiny/next-gen/residential/agri/accessories and originalPrice is genuinely set
   const discount =
-    !isTiny && product.originalPrice && product.originalPrice > product.price
+    !isTiny && !isNextGen && !isResidential && !isAgri && !isAccessories && product.originalPrice && product.originalPrice > product.price
       ? Math.round((1 - product.price / product.originalPrice) * 100)
       : null;
+
+  // Format pipe size cleanly without duplicate 'mm'
+  const formattedPipe = product.inletOutletSize
+    ? product.inletOutletSize
+    : product.pipeSize
+    ? product.pipeSize.toLowerCase().includes('mm') || product.pipeSize.includes('"')
+      ? product.pipeSize
+      : `${product.pipeSize} mm`
+    : '-';
+
+  // Format pressure / head / cable cleanly
+  const formattedPressureHead = product.maxPressure
+    ? product.maxPressure
+    : product.cableLength
+    ? product.cableLength.toLowerCase().includes('m')
+      ? product.cableLength
+      : `${product.cableLength} m`
+    : product.head || '-';
+
+  // Format solids cleanly
+  const hasSolid = Boolean(product.solidHandling && product.solidHandling !== '-' && product.solidHandling.trim());
+  const formattedSolid = hasSolid
+    ? product.solidHandling!.toLowerCase().includes('mm')
+      ? product.solidHandling!
+      : `${product.solidHandling!} mm`
+    : product.phase || '-';
 
   return (
     <div
@@ -34,8 +68,9 @@ export default function ProductCard({
         onClick={() => onClick(product)}
       >
         <img
-          src={product.image}
+          src={imgError || !product.image ? FALLBACK_PUMP_IMAGE : product.image}
           alt={product.name}
+          onError={() => setImgError(true)}
           className="w-full h-full object-cover rounded-xl group-hover:scale-105 transition-transform duration-500 shadow-2xs"
           loading="lazy"
         />
@@ -49,12 +84,12 @@ export default function ProductCard({
 
         {/* Secondary Category / Feature Badge - Bottom Left over image */}
         {product.badge && (
-          <span className="absolute bottom-2 left-2.5 sm:bottom-2.5 sm:left-3 bg-blue-700/90 backdrop-blur-xs text-white text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-full shadow-xs">
+          <span className="absolute bottom-2 left-2.5 sm:bottom-2.5 sm:left-3 bg-blue-700/90 backdrop-blur-xs text-white text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-full shadow-xs truncate max-w-[85%]">
             {product.badge}
           </span>
         )}
 
-        {/* Non-Tiny Discount Badge (if any) */}
+        {/* Non-Tiny / Non-NextGen Discount Badge (if any) */}
         {discount && (
           <span className="absolute top-2.5 right-11 sm:top-3 sm:right-12 bg-red-600 text-white text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-md shadow-xs">
             -{discount}%
@@ -83,7 +118,7 @@ export default function ProductCard({
       <div className="p-3 sm:p-4 flex flex-col flex-1 min-w-0">
         {/* Rating & Subcategory Tag */}
         <div className="flex items-center justify-between gap-1 mb-1.5 flex-wrap">
-          <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-sky-800 bg-sky-50 px-2 py-0.5 rounded truncate max-w-[150px] sm:max-w-none">
+          <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-sky-800 bg-sky-50 px-2 py-0.5 rounded truncate max-w-[150px] sm:max-w-none" title={product.subcategory}>
             {product.subcategory || 'C.R.I. Pump'}
           </span>
           <div className="flex items-center gap-1">
@@ -98,42 +133,133 @@ export default function ProductCard({
 
         {/* Model Title */}
         <h3
-          className="text-xs sm:text-sm font-bold text-gray-900 line-clamp-2 mb-2 sm:mb-2.5 leading-snug cursor-pointer group-hover:text-blue-700 transition-colors"
+          className="text-xs sm:text-sm font-bold text-gray-900 mb-2 sm:mb-2.5 leading-snug cursor-pointer group-hover:text-blue-700 transition-colors min-h-[2.4rem] flex items-start"
           onClick={() => onClick(product)}
+          title={product.name}
         >
           {product.name}
         </h3>
 
-        {/* Technical Specification Matrix for Pumps */}
-        {isTiny || product.hp ? (
+        {/* Technical Specification Matrix for Accessories & Pumps */}
+        {isAccessories ? (
+          product.valveType || product.subcategory.includes('Valve') ? (
+            <div className="bg-slate-50/90 rounded-xl p-2 sm:p-2.5 mb-2.5 sm:mb-3 border border-slate-200/70 text-[10px] sm:text-[11px] flex flex-col gap-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-gray-500 font-medium">Valve Type:</span>
+                <span className="font-bold text-gray-900 truncate ml-1">{product.valveType || 'ISI Valve'}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-gray-500 font-medium">Nominal Size:</span>
+                <span className="font-bold text-blue-900 truncate ml-1">{product.sizeMm || product.pipeSize || '-'}</span>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-slate-50/90 rounded-xl p-2 sm:p-2.5 mb-2.5 sm:mb-3 border border-slate-200/70 text-[10px] sm:text-[11px] flex flex-col gap-1.5">
+              <div className="grid grid-cols-2 gap-x-2 gap-y-1">
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-500 font-medium">Rec. HP:</span>
+                  <span className="font-bold text-gray-900 truncate ml-1" title={product.recommendedHp || product.hp}>
+                    {product.recommendedHp || product.hp || '-'}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-500 font-medium">Relay:</span>
+                  <span className="font-semibold text-gray-900 truncate ml-1" title={product.relayRange}>
+                    {product.relayRange || '-'}
+                  </span>
+                </div>
+                <div className="col-span-2 flex items-center justify-between pt-1 border-t border-slate-200/60">
+                  <span className="text-gray-500 font-medium">Type / Phase:</span>
+                  <span className="font-semibold text-blue-800 truncate ml-1" title={product.phase}>
+                    {product.phase || '-'}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )
+        ) : isTiny || isNextGen || isResidential || isAgri || product.hp || product.powerWatts || product.cableLength ? (
           <div className="bg-slate-50/90 rounded-xl p-2 sm:p-2.5 mb-2.5 sm:mb-3 border border-slate-200/70 text-[10px] sm:text-[11px] flex flex-col gap-1 sm:gap-1.5">
             <div className="grid grid-cols-2 gap-x-2 gap-y-1">
               <div className="flex items-center justify-between">
                 <span className="text-gray-500 font-medium">Power:</span>
-                <span className="font-bold text-gray-900 truncate ml-1">{product.hp || '-'}</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-gray-500 font-medium">Pipe:</span>
-                <span className="font-semibold text-gray-900 truncate ml-1">{product.pipeSize ? `${product.pipeSize} mm` : '-'}</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-gray-500 font-medium">Head:</span>
-                <span className="font-semibold text-gray-800 truncate ml-1">{product.head || '-'}</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-gray-500 font-medium">Type:</span>
-                <span className="font-semibold text-gray-800 truncate ml-1" title={product.phase}>
-                  {product.phase || '-'}
+                <span className="font-bold text-gray-900 truncate ml-1" title={String(product.stageTank || product.powerWatts || product.hp || '-')}>
+                  {product.stageTank || product.powerWatts || product.hp || '-'}
                 </span>
               </div>
+
+              {product.stages ? (
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-500 font-medium">Stage:</span>
+                  <span className="font-semibold text-gray-900 truncate ml-1" title={product.stages}>
+                    {product.stages}
+                  </span>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-500 font-medium">
+                    {hasSolid ? 'Solids:' : 'Type:'}
+                  </span>
+                  <span className="font-semibold text-gray-800 truncate ml-1" title={hasSolid ? formattedSolid : (product.phase || '-')}>
+                    {formattedSolid}
+                  </span>
+                </div>
+              )}
+
+              <div className="flex items-center justify-between">
+                <span className="text-gray-500 font-medium">{product.inletOutletSize ? 'In/Out:' : 'Pipe:'}</span>
+                <span className="font-semibold text-gray-900 truncate ml-1" title={formattedPipe}>
+                  {formattedPipe}
+                </span>
+              </div>
+
+              {product.stages ? (
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-500 font-medium">Type:</span>
+                  <span className="font-semibold text-gray-800 truncate ml-1" title={product.phase || '-'}>
+                    {product.phase || '-'}
+                  </span>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-500 font-medium">
+                    {product.maxPressure ? 'Pressure:' : product.cableLength ? 'Cable:' : 'Head:'}
+                  </span>
+                  <span className="font-semibold text-gray-800 truncate ml-1" title={formattedPressureHead}>
+                    {formattedPressureHead}
+                  </span>
+                </div>
+              )}
+
+              {product.stages && (
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-500 font-medium">Head:</span>
+                  <span className="font-semibold text-gray-800 truncate ml-1" title={formattedPressureHead}>
+                    {formattedPressureHead}
+                  </span>
+                </div>
+              )}
+
+              {product.stages && (product.discharge || product.flowRate) && (
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-500 font-medium shrink-0">{product.flowRate ? 'Flow:' : 'Discharge:'}</span>
+                  <span className="font-semibold text-blue-800 truncate ml-1" title={product.flowRate || product.discharge}>
+                    {product.flowRate || product.discharge}
+                  </span>
+                </div>
+              )}
             </div>
 
-            {product.discharge && (
-              <div className="flex items-center justify-between pt-1 border-t border-slate-200/60 text-[9px] sm:text-[10px]">
-                <span className="text-gray-500 font-medium">Discharge:</span>
-                <span className="font-semibold text-blue-800 truncate ml-1" title={product.discharge}>
-                  {product.discharge}
+            {!product.stages && (product.discharge || product.flowRate || (hasSolid && product.phase)) && (
+              <div className="flex items-center justify-between pt-1 border-t border-slate-200/60 text-[9px] sm:text-[10px] gap-1">
+                <span className="text-gray-500 font-medium shrink-0">{product.flowRate ? 'Flow Rate:' : product.discharge ? 'Discharge:' : 'Phase:'}</span>
+                <span className="font-semibold text-blue-800 truncate ml-1" title={product.flowRate || product.discharge || product.phase}>
+                  {product.flowRate || product.discharge || product.phase}
                 </span>
+                {hasSolid && product.phase && (product.discharge || product.flowRate) && (
+                  <span className="text-gray-500 font-medium ml-auto pl-2 border-l border-slate-200 shrink-0">
+                    Phase: <strong className="text-gray-700 font-bold">{product.phase}</strong>
+                  </span>
+                )}
               </div>
             )}
           </div>
@@ -162,14 +288,26 @@ export default function ProductCard({
                 ₹{product.price.toLocaleString('en-IN')}
               </span>
             </div>
-            {!isTiny && product.originalPrice && product.originalPrice > product.price && (
+            {product.rcp && (
+              <div className="text-right">
+                <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-sky-600 block">
+                  RCP
+                </span>
+                <span className="text-xs sm:text-sm font-bold text-sky-800">
+                  ₹{product.rcp.toLocaleString('en-IN')}
+                </span>
+              </div>
+            )}
+            {!isTiny && !isNextGen && !isResidential && !isAgri && !isAccessories && product.originalPrice && product.originalPrice > product.price && (
               <span className="text-xs text-gray-400 line-through">
                 ₹{product.originalPrice.toLocaleString('en-IN')}
               </span>
             )}
-            <span className="text-[9px] sm:text-[10px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 sm:px-2 py-0.5 rounded-full self-center">
-              Genuine C.R.I.
-            </span>
+            {!product.rcp && (
+              <span className="text-[9px] sm:text-[10px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 sm:px-2 py-0.5 rounded-full self-center">
+                Genuine C.R.I.
+              </span>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-1.5 sm:gap-2">

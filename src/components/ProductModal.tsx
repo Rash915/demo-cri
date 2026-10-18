@@ -22,8 +22,12 @@ export default function ProductModal({
   if (!product) return null;
 
   const isTiny = product.category === 'tiny';
+  const isNextGen = product.category === 'next-gen';
+  const isResidential = product.category === 'residential';
+  const isAgri = product.category === 'agri';
+  const isAccessories = product.category === 'accessories';
   const discount =
-    !isTiny && product.originalPrice && product.originalPrice > product.price
+    !isTiny && !isNextGen && !isResidential && !isAgri && !isAccessories && product.originalPrice && product.originalPrice > product.price
       ? Math.round((1 - product.price / product.originalPrice) * 100)
       : null;
 
@@ -91,12 +95,18 @@ export default function ProductModal({
             </div>
           )}
 
-          {/* Clean List Price Alone - No RCP */}
-          <div className="flex items-baseline gap-2 mb-3 bg-slate-50 p-2.5 rounded-xl border border-slate-200/80">
+          {/* Price Container */}
+          <div className="flex items-baseline justify-between gap-3 mb-3 bg-slate-50 p-2.5 rounded-xl border border-slate-200/80 flex-wrap">
             <div>
               <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 block">Official List Price</span>
               <span className="text-2xl font-extrabold text-blue-900">₹{product.price.toLocaleString('en-IN')}</span>
             </div>
+            {product.rcp && (
+              <div className="text-right">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-sky-600 block">Rate Contract (RCP)</span>
+                <span className="text-xl font-bold text-sky-800">₹{product.rcp.toLocaleString('en-IN')}</span>
+              </div>
+            )}
             <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 ml-auto">
               In Stock • 100% Genuine C.R.I.
             </span>
@@ -107,20 +117,48 @@ export default function ProductModal({
           </p>
 
           {/* Technical Specs Matrix */}
-          {(product.hp || product.pipeSize || product.head || product.discharge) && (
+          {(product.hp || product.pipeSize || product.head || product.discharge || product.powerWatts || product.maxPressure || product.cableLength || product.solidHandling || product.relayRange || product.recommendedHp || product.valveType || product.sizeMm) && (
             <div className="bg-blue-50/50 rounded-xl p-3 mb-4 border border-blue-100 text-xs">
               <h4 className="text-[11px] font-bold uppercase tracking-wider text-blue-900 mb-2">Technical Specifications</h4>
               <div className="grid grid-cols-2 gap-x-3 gap-y-1.5">
-                {product.hp && (
+                {product.recommendedHp && (
                   <div className="flex justify-between border-b border-blue-100/60 pb-1">
-                    <span className="text-gray-500">Power:</span>
-                    <span className="font-bold text-gray-900">{product.hp}</span>
+                    <span className="text-gray-500">Rec. Power:</span>
+                    <span className="font-bold text-gray-900">{product.recommendedHp}</span>
                   </div>
                 )}
-                {product.pipeSize && (
+                {product.relayRange && (
                   <div className="flex justify-between border-b border-blue-100/60 pb-1">
-                    <span className="text-gray-500">Pipe Size:</span>
-                    <span className="font-semibold text-gray-900">{product.pipeSize} mm</span>
+                    <span className="text-gray-500">Relay Range:</span>
+                    <span className="font-semibold text-gray-900">{product.relayRange}</span>
+                  </div>
+                )}
+                {product.valveType && (
+                  <div className="flex justify-between border-b border-blue-100/60 pb-1">
+                    <span className="text-gray-500">Valve Type:</span>
+                    <span className="font-semibold text-gray-900">{product.valveType}</span>
+                  </div>
+                )}
+                {product.sizeMm && (
+                  <div className="flex justify-between border-b border-blue-100/60 pb-1">
+                    <span className="text-gray-500">Nominal Size:</span>
+                    <span className="font-semibold text-gray-900">{product.sizeMm}</span>
+                  </div>
+                )}
+                {!product.recommendedHp && (product.stageTank || product.hp || product.powerWatts || product.stages) && (
+                  <div className="flex justify-between border-b border-blue-100/60 pb-1">
+                    <span className="text-gray-500">Power:</span>
+                    <span className="font-bold text-gray-900">
+                      {product.stageTank || product.powerWatts || (product.stages && product.hp ? `${product.hp} (${product.stages})` : product.hp || product.stages)}
+                    </span>
+                  </div>
+                )}
+                {(product.pipeSize || product.inletOutletSize) && (
+                  <div className="flex justify-between border-b border-blue-100/60 pb-1">
+                    <span className="text-gray-500">{product.inletOutletSize ? 'Inlet/Outlet:' : 'Pipe Size:'}</span>
+                    <span className="font-semibold text-gray-900">
+                      {product.inletOutletSize || (product.pipeSize ? (product.pipeSize.toLowerCase().includes('mm') || product.pipeSize.includes('"') ? product.pipeSize : `${product.pipeSize} mm`) : '-')}
+                    </span>
                   </div>
                 )}
                 {product.phase && (
@@ -129,16 +167,32 @@ export default function ProductModal({
                     <span className="font-semibold text-gray-900">{product.phase}</span>
                   </div>
                 )}
-                {product.head && (
+                {(product.head || product.maxPressure) && (
                   <div className="flex justify-between border-b border-blue-100/60 pb-1">
-                    <span className="text-gray-500">Head:</span>
-                    <span className="font-semibold text-gray-900">{product.head}</span>
+                    <span className="text-gray-500">{product.maxPressure ? 'Pressure:' : 'Head:'}</span>
+                    <span className="font-semibold text-gray-900">{product.maxPressure || product.head}</span>
                   </div>
                 )}
-                {product.discharge && (
+                {product.solidHandling && (
+                  <div className="flex justify-between border-b border-blue-100/60 pb-1">
+                    <span className="text-gray-500">Solid Handling:</span>
+                    <span className="font-semibold text-gray-900">
+                      {product.solidHandling.toLowerCase().includes('mm') ? product.solidHandling : `${product.solidHandling} mm`}
+                    </span>
+                  </div>
+                )}
+                {product.cableLength && (
+                  <div className="flex justify-between border-b border-blue-100/60 pb-1">
+                    <span className="text-gray-500">Cable Length:</span>
+                    <span className="font-semibold text-gray-900">
+                      {product.cableLength.toLowerCase().includes('m') ? product.cableLength : `${product.cableLength} m`}
+                    </span>
+                  </div>
+                )}
+                {(product.discharge || product.flowRate) && (
                   <div className="col-span-2 flex justify-between pt-0.5">
-                    <span className="text-gray-500">Discharge Flow:</span>
-                    <span className="font-bold text-blue-700">{product.discharge}</span>
+                    <span className="text-gray-500">{product.flowRate ? 'Flow Rate:' : 'Discharge Flow:'}</span>
+                    <span className="font-bold text-blue-700">{product.flowRate || product.discharge}</span>
                   </div>
                 )}
               </div>
