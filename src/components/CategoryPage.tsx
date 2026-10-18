@@ -7,6 +7,7 @@ import NextGenCatalogOverview from './NextGenCatalogOverview';
 import ResidentialCatalogOverview from './ResidentialCatalogOverview';
 import AgriCatalogOverview from './AgriCatalogOverview';
 import AccessoriesCatalogOverview from './AccessoriesCatalogOverview';
+import { hebronLogo } from '../assets/logoData';
 
 interface CategoryPageProps {
   categoryId: string;
@@ -607,7 +608,7 @@ export default function CategoryPage({
                 {activeCategory === 'tiny' && selectedSubcat !== 'All'
                   ? `C.R.I. ${selectedSubcat === 'All-Models' ? 'Tiny All Models' : selectedSubcat}`
                   : activeCategory === 'next-gen' && selectedSubcat !== 'All'
-                  ? `C.R.I. ${nextGenSubcategoryShortLabels[selectedSubcat] || selectedSubcat}`
+                  ? `C.R.I. ${selectedSubcat === 'All-Models' ? 'Next Gen All Models' : nextGenSubcategoryShortLabels[selectedSubcat] || selectedSubcat}`
                   : activeCategory === 'next-gen' && nextGenGroup !== 'All'
                   ? `C.R.I. ${nextGenGroup}`
                   : activeCategory === 'residential' && selectedSubcat !== 'All'
@@ -628,7 +629,7 @@ export default function CategoryPage({
               {activeCategory === 'tiny' && tinySubcategoriesMeta[selectedSubcat]
                 ? `${tinySubcategoriesMeta[selectedSubcat].tag} • ${tinySubcategoriesMeta[selectedSubcat].description}`
                 : activeCategory === 'next-gen' && nextGenSubcategoriesMeta[selectedSubcat]
-                ? `${nextGenSubcategoriesMeta[selectedSubcat].group} • ${nextGenSubcategoriesMeta[selectedSubcat].tag} • ${nextGenSubcategoriesMeta[selectedSubcat].description}`
+                ? `${nextGenSubcategoriesMeta[selectedSubcat].tag} • ${nextGenSubcategoriesMeta[selectedSubcat].description}`
                 : activeCategory === 'residential' && residentialSubcategoriesMeta[selectedSubcat]
                 ? `${residentialSubcategoriesMeta[selectedSubcat].tag} • ${residentialSubcategoriesMeta[selectedSubcat].description}`
                 : activeCategory === 'agri' && agriSubcategoriesMeta[selectedSubcat]
@@ -650,103 +651,14 @@ export default function CategoryPage({
                 onClick={() => handleSelectSubcategory('All')}
                 className="text-xs text-blue-700 hover:text-blue-900 font-semibold underline cursor-pointer ml-1"
               >
-                {activeCategory === 'tiny' || activeCategory === 'next-gen' || activeCategory === 'residential' || activeCategory === 'agri' ? 'All Models' : 'Reset to All'}
+                {activeCategory === 'tiny' || activeCategory === 'next-gen' || activeCategory === 'residential' || activeCategory === 'agri' || activeCategory === 'accessories' ? 'All Models' : 'Reset to All'}
               </button>
             )}
           </div>
         </div>
 
         {/* SUBCATEGORY NAVIGATION BAR */}
-        {activeCategory === 'next-gen' ? (
-          <div className="bg-slate-50/90 rounded-2xl border border-gray-200/90 p-3 sm:p-4 mb-5 shadow-2xs flex flex-col gap-2.5">
-            {/* 1. Compact Group Filter Tabs */}
-            <div className="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap pb-1 scrollbar-none touch-pan-x">
-              <span className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider mr-1 shrink-0">
-                Group:
-              </span>
-              {NEXT_GEN_GROUPS.map(grp => {
-                const count = nextGenGroupCounts[grp.id] || 0;
-                const isGroupActive = nextGenGroup === grp.id;
-
-                return (
-                  <button
-                    key={grp.id}
-                    onClick={() => handleSelectNextGenGroup(grp.id)}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer flex items-center gap-1.5 border ${
-                      isGroupActive
-                        ? 'bg-blue-700 text-white border-blue-700 shadow-xs'
-                        : 'bg-white text-gray-700 hover:bg-gray-100 border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    <span>{grp.icon}</span>
-                    <span>{grp.shortName}</span>
-                    <span
-                      className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                        isGroupActive ? 'bg-white/25 text-white' : 'bg-gray-100 text-gray-600'
-                      }`}
-                    >
-                      {count}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* 2. Compact Subcategory Chips for Active Group */}
-            <div className="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap pt-2 border-t border-gray-200/70 scrollbar-none touch-pan-x">
-              <span className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider mr-1 shrink-0">
-                Subcategory:
-              </span>
-              {/* 'All in Group' chip */}
-              <button
-                onClick={() => setSelectedSubcat('All')}
-                className={`px-3 py-1 rounded-full text-xs font-semibold transition-all shrink-0 cursor-pointer flex items-center gap-1.5 border ${
-                  selectedSubcat === 'All'
-                    ? 'bg-sky-800 text-white border-sky-800 shadow-2xs font-bold'
-                    : 'bg-white text-gray-700 hover:bg-gray-100 border-gray-200'
-                }`}
-              >
-                <span>All {nextGenGroup === 'All' ? 'Next Gen Models' : NEXT_GEN_GROUPS.find(g => g.id === nextGenGroup)?.shortName || 'Group Models'}</span>
-                <span
-                  className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                    selectedSubcat === 'All' ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-600'
-                  }`}
-                >
-                  {nextGenGroup === 'All' ? categoryProducts.length : nextGenGroupCounts[nextGenGroup] || 0}
-                </span>
-              </button>
-
-              {/* Subcategories chips */}
-              {displayedNextGenSubcategories.map(sub => {
-                const isSelected = selectedSubcat === sub;
-                const count = subcatCounts[sub] || 0;
-                const shortLabel = nextGenSubcategoryShortLabels[sub] || sub;
-
-                return (
-                  <button
-                    key={sub}
-                    onClick={() => handleSelectSubcategory(sub)}
-                    title={sub}
-                    className={`px-3 py-1 rounded-full text-xs font-semibold transition-all shrink-0 cursor-pointer flex items-center gap-1.5 border ${
-                      isSelected
-                        ? 'bg-blue-700 text-white border-blue-700 shadow-2xs font-bold'
-                        : 'bg-white text-gray-700 hover:bg-gray-100 border-gray-200'
-                    }`}
-                  >
-                    <span>{shortLabel}</span>
-                    <span
-                      className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                        isSelected ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-600'
-                      }`}
-                    >
-                      {count}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        ) : tier2Subcategories.length > 0 ? (
+        {tier2Subcategories.length > 0 && (
           <div className="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap pb-2 mb-4 sm:mb-5 scrollbar-none touch-pan-x">
             {activeCategory === 'tiny' ? (
               <button
@@ -755,6 +667,14 @@ export default function CategoryPage({
               >
                 <span>←</span>
                 <span>14 Subcategories</span>
+              </button>
+            ) : activeCategory === 'next-gen' ? (
+              <button
+                onClick={() => handleSelectSubcategory('All')}
+                className="px-3 py-1 rounded-full text-xs font-bold transition-all shrink-0 cursor-pointer bg-slate-100 hover:bg-slate-200 text-gray-800 border border-gray-300 flex items-center gap-1 shadow-2xs"
+              >
+                <span>←</span>
+                <span>20 Subcategories</span>
               </button>
             ) : activeCategory === 'residential' ? (
               <button
@@ -795,17 +715,19 @@ export default function CategoryPage({
             {tier2Subcategories.map(sub => {
               const isSelected = selectedSubcat === sub;
               const count = subcatCounts[sub] || 0;
+              const label = activeCategory === 'next-gen' ? (nextGenSubcategoryShortLabels[sub] || sub) : sub;
               return (
                 <button
                   key={sub}
                   onClick={() => handleSelectSubcategory(sub)}
+                  title={sub}
                   className={`px-3 py-1 rounded-full text-xs font-semibold transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
                     isSelected
                       ? 'bg-blue-700 text-white shadow-2xs font-bold'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
-                  <span>{sub}</span>
+                  <span>{label}</span>
                   <span
                     className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
                       isSelected ? 'bg-white/20 text-white' : 'bg-gray-200 text-gray-600'
@@ -817,10 +739,10 @@ export default function CategoryPage({
               );
             })}
           </div>
-        ) : null}
+        )}
 
-        {/* CONTROLS BAR: SEARCH, PHASE, HP, VIEW MODE, SORT - Hidden on Tiny models page */}
-        {activeCategory !== 'tiny' && (
+        {/* CONTROLS BAR: SEARCH, PHASE, HP, VIEW MODE, SORT - Hidden on Category models pages */}
+        {activeCategory === 'all' && (
           <div className="bg-white rounded-xl border border-gray-200 p-3 sm:p-3.5 mb-6 shadow-2xs flex flex-col gap-3">
             <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
               {/* Model Search Box */}

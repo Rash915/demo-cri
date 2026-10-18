@@ -3,6 +3,7 @@ import { tinyCatalogueProducts } from './data/tinyCatalogue';
 import { nextGenCatalogueProducts } from './data/nextGenCatalogue';
 import { residentialCatalogueProducts } from './data/residentialCatalogue';
 import { accessoriesCatalogueProducts } from './data/accessoriesCatalogue';
+import { categoryImages } from './assets/categoryImages';
 
 export interface Product {
   id: string;
